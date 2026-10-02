@@ -1,1416 +1,249 @@
 <?php
-
-$name = "Chaimae Salah";
-$job = "Développeuse Web";
-
-$description =
-    "Je crée des sites web modernes, élégants et interactifs.";
-
-?>
-
-<!DOCTYPE html>
-
-<html lang="fr">
-
-<head>
-
-<meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title><?php echo $name; ?> | Portfolio</title>
-
-
-<style>
-
-/* =====================================
-   RESET
-===================================== */
-
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    scroll-behavior: smooth;
-}
-
-
-body {
-
-    font-family: Arial, sans-serif;
-
-    background: #0A0A0A;
-
-    color: #E8D8C3;
-
-}
-
-
-a {
-    text-decoration: none;
-    color: inherit;
-}
-
-
-/* =====================================
-   COLORS
-===================================== */
-
-:root {
-
-    --black: #0A0A0A;
-
-    --black2: #11100F;
-
-    --dark: #1A1714;
-
-    --gray: #292522;
-
-    --gray-text: #A99B8C;
-
-    --caramel: #B8793D;
-
-    --caramel-dark: #8B5428;
-
-    --beige: #E8D8C3;
-
-}
-
-
-/* =====================================
-   NAVBAR
-===================================== */
-
-nav {
-
-    position: fixed;
-
-    top: 0;
-    left: 0;
-
-    width: 100%;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    padding: 20px 8%;
-
-    background: rgba(10,10,10,0.90);
-
-    backdrop-filter: blur(12px);
-
-    border-bottom: 1px solid #292522;
-
-    z-index: 1000;
-
-}
-
-
-.logo {
-
-    font-size: 26px;
-
-    font-weight: bold;
-
-    letter-spacing: 1px;
-
-}
-
-
-.logo span {
-
-    color: var(--caramel);
-
-}
-
-
-.nav-links {
-
-    display: flex;
-
-    gap: 30px;
-
-    list-style: none;
-
-}
-
-
-.nav-links a {
-
-    color: var(--beige);
-
-    transition: 0.3s;
-
-}
-
-
-.nav-links a:hover {
-
-    color: var(--caramel);
-
-}
-
-
-/* =====================================
-   HERO
-===================================== */
-
-#home {
-
-    min-height: 100vh;
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    padding: 100px 8%;
-
-    background:
-
-        radial-gradient(
-            circle at 80% 30%,
-            rgba(184,121,61,0.18),
-            transparent 28%
-        ),
-
-        #0A0A0A;
-
-}
-
-
-.hero {
-
-    width: 100%;
-
-    max-width: 1100px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 60px;
-
-}
-
-
-.hero-text {
-
-    animation: slideLeft 1s ease;
-
-}
-
-
-.hero-text small {
-
-    color: var(--gray-text);
-
-    font-size: 18px;
-
-}
-
-
-.hero-text h1 {
-
-    font-size: 65px;
-
-    margin: 15px 0;
-
-    color: var(--beige);
-
-}
-
-
-.hero-text h1 span {
-
-    color: var(--caramel);
-
-}
-
-
-.typing {
-
-    font-size: 25px;
-
-    color: var(--caramel);
-
-    border-right: 3px solid var(--caramel);
-
-    padding-right: 6px;
-
-}
-
-
-.hero-text p {
-
-    margin: 25px 0;
-
-    color: var(--gray-text);
-
-    line-height: 1.8;
-
-    max-width: 550px;
-
-}
-
-
-/* =====================================
-   BUTTON
-===================================== */
-
-.btn {
-
-    display: inline-block;
-
-    background: var(--caramel);
-
-    color: #0A0A0A;
-
-    padding: 13px 28px;
-
-    border-radius: 5px;
-
-    font-weight: bold;
-
-    transition: 0.3s;
-
-}
-
-
-.btn:hover {
-
-    background: #D19A62;
-
-    transform: translateY(-5px);
-
-    box-shadow:
-
-        0 10px 30px rgba(184,121,61,0.30);
-
-}
-
-
-/* =====================================
-   PROFILE
-===================================== */
-
-.profile {
-
-    width: 300px;
-
-    height: 300px;
-
-    flex-shrink: 0;
-
-    border-radius: 50%;
-
-    border: 2px solid var(--caramel);
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
-
-    background:
-
-        radial-gradient(
-            circle,
-            #292522,
-            #11100F
-        );
-
-    box-shadow:
-
-        0 0 40px rgba(184,121,61,0.25),
-
-        inset 0 0 40px rgba(184,121,61,0.08);
-
-    animation: floating 3s ease-in-out infinite;
-
-}
-
-
-.profile span {
-
-    font-size: 100px;
-
-}
-
-
-/* =====================================
-   SECTIONS
-===================================== */
-
-section {
-
-    padding: 100px 8%;
-
-}
-
-
-.section-title {
-
-    text-align: center;
-
-    margin-bottom: 60px;
-
-}
-
-
-.section-title h2 {
-
-    font-size: 40px;
-
-    color: var(--beige);
-
-}
-
-
-.section-title span {
-
-    color: var(--caramel);
-
-}
-
-
-.section-title p {
-
-    color: var(--gray-text);
-
-    margin-top: 10px;
-
-}
-
-
-/* =====================================
-   ABOUT
-===================================== */
-
-#about {
-
-    background: #11100F;
-
-}
-
-
-.about-box {
-
-    max-width: 900px;
-
-    margin: auto;
-
-    background: #1A1714;
-
-    padding: 40px;
-
-    border-left: 4px solid var(--caramel);
-
-    border-radius: 8px;
-
-    transition: 0.4s;
-
-}
-
-
-.about-box:hover {
-
-    transform: translateY(-8px);
-
-    box-shadow:
-
-        0 20px 40px rgba(0,0,0,0.5);
-
-}
-
-
-.about-box p {
-
-    color: var(--gray-text);
-
-    line-height: 1.8;
-
-}
-
-
-/* =====================================
-   SKILLS
-===================================== */
-
-.skills-container {
-
-    max-width: 900px;
-
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 20px;
-
-}
-
-
-.skill {
-
-    background: #181512;
-
-    padding: 30px;
-
-    text-align: center;
-
-    border-radius: 8px;
-
-    border: 1px solid #302A25;
-
-    transition: 0.4s;
-
-}
-
-
-.skill:hover {
-
-    transform: translateY(-10px);
-
-    border-color: var(--caramel);
-
-    box-shadow:
-
-        0 10px 30px
-        rgba(184,121,61,0.20);
-
-}
-
-
-.skill h3 {
-
-    margin-bottom: 10px;
-
-    color: var(--beige);
-
-}
-
-
-.skill p {
-
-    color: var(--gray-text);
-
-}
-
-
-/* =====================================
-   PROJECTS
-===================================== */
-
-#projects {
-
-    background: #11100F;
-
-}
-
-
-.projects-container {
-
-    max-width: 1000px;
-
-    margin: auto;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
-    gap: 25px;
-
-}
-
-
-.project {
-
-    background: #181512;
-
-    padding: 30px;
-
-    border-radius: 10px;
-
-    border: 1px solid #302A25;
-
-    transition: 0.4s;
-
-}
-
-
-.project:hover {
-
-    transform:
-
-        translateY(-10px)
-        scale(1.02);
-
-    border-color: var(--caramel);
-
-    box-shadow:
-
-        0 15px 40px
-        rgba(184,121,61,0.20);
-
-}
-
-
-.project-icon {
-
-    font-size: 45px;
-
-    margin-bottom: 20px;
-
-}
-
-
-.project h3 {
-
-    margin-bottom: 15px;
-
-    color: var(--beige);
-
-}
-
-
-.project p {
-
-    color: var(--gray-text);
-
-    line-height: 1.6;
-
-}
-
-
-/* =====================================
-   CONTACT
-===================================== */
-
-.contact-box {
-
-    max-width: 700px;
-
-    margin: auto;
-
-    background: #181512;
-
-    padding: 40px;
-
-    border-radius: 10px;
-
-    border: 1px solid #302A25;
-
-}
-
-
-input,
-textarea {
-
-    width: 100%;
-
-    padding: 15px;
-
-    margin-bottom: 15px;
-
-    background: #0E0D0C;
-
-    border: 1px solid #302A25;
-
-    color: var(--beige);
-
-    border-radius: 5px;
-
-    outline: none;
-
-}
-
-
-input:focus,
-textarea:focus {
-
-    border-color: var(--caramel);
-
-    box-shadow:
-
-        0 0 10px
-        rgba(184,121,61,0.15);
-
-}
-
-
-textarea {
-
-    height: 150px;
-
-    resize: none;
-
-}
-
-
-button {
-
-    border: none;
-
-    cursor: pointer;
-
-    font-size: 16px;
-
-}
-
-
-/* =====================================
-   FOOTER
-===================================== */
-
-footer {
-
-    text-align: center;
-
-    padding: 30px;
-
-    background: #080808;
-
-    color: #70665D;
-
-}
-
-
-footer span {
-
-    color: var(--caramel);
-
-}
-
-
-/* =====================================
-   ANIMATIONS
-===================================== */
-
-@keyframes floating {
-
-    0%, 100% {
-
-        transform: translateY(0);
-
-    }
-
-    50% {
-
-        transform: translateY(-20px);
-
-    }
-
-}
-
-
-@keyframes slideLeft {
-
-    from {
-
-        opacity: 0;
-
-        transform:
-            translateX(-80px);
-
-    }
-
-    to {
-
-        opacity: 1;
-
-        transform:
-            translateX(0);
-
-    }
-
-}
-
-
-/* =====================================
-   RESPONSIVE
-===================================== */
-
-@media(max-width: 800px) {
-
-    .nav-links {
-
-        display: none;
-
-    }
-
-
-    .hero {
-
-        flex-direction: column-reverse;
-
-        text-align: center;
-
-    }
-
-
-    .hero-text h1 {
-
-        font-size: 45px;
-
-    }
-
-
-    .profile {
-
-        width: 220px;
-
-        height: 220px;
-
-    }
-
-
-    .skills-container,
-    .projects-container {
-
-        grid-template-columns: 1fr;
-
-    }
-
-}
-
-</style>
-
-</head>
-
-
-<body>
-
-
-<!-- ==============================
-     NAVBAR
-============================== -->
-
-<nav>
-
-    <div class="logo">
-
-        Port<span>folio</span>
-
-    </div>
-
-
-    <ul class="nav-links">
-
-        <li>
-            <a href="#home">Accueil</a>
-        </li>
-
-        <li>
-            <a href="#about">À propos</a>
-        </li>
-
-        <li>
-            <a href="#skills">Compétences</a>
-        </li>
-
-        <li>
-            <a href="#projects">Projets</a>
-        </li>
-
-        <li>
-            <a href="#contact">Contact</a>
-        </li>
-
-    </ul>
-
-</nav>
-
-
-<!-- ==============================
-     HOME
-============================== -->
-
-<section id="home">
-
-    <div class="hero">
-
-
-        <div class="hero-text">
-
-            <small>
-                Bonjour, je suis
-            </small>
-
-
-            <h1>
-
-                <?php echo $name; ?>
-
-            </h1>
-
-
-            <div
-                class="typing"
-                id="typing">
-            </div>
-
-
-            <p>
-
-                <?php echo $description; ?>
-
-                Je suis passionnée par le
-                développement web et la
-                création de projets modernes.
-
-            </p>
-
-
-            <a
-                href="#projects"
-                class="btn">
-
-                Voir mes projets
-
-            </a>
-
-        </div>
-
-
-        <div class="profile">
-
-            <span>💻</span>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     ABOUT
-============================== -->
-
-<section id="about">
-
-
-    <div class="section-title">
-
-        <h2>
-
-            À <span>propos</span>
-
-        </h2>
-
-
-        <p>
-
-            Découvrez mon parcours
-
-        </p>
-
-    </div>
-
-
-    <div class="about-box">
-
-        <p>
-
-            Je suis une développeuse web
-            passionnée par la programmation
-            et les nouvelles technologies.
-
-            J'aime créer des interfaces
-            modernes, simples et agréables
-            à utiliser.
-
-        </p>
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     SKILLS
-============================== -->
-
-<section id="skills">
-
-
-    <div class="section-title">
-
-        <h2>
-
-            Mes <span>compétences</span>
-
-        </h2>
-
-
-        <p>
-
-            Les technologies que j'apprends
-
-        </p>
-
-    </div>
-
-
-    <div class="skills-container">
-
-
-        <div class="skill">
-
-            <h3>HTML</h3>
-
-            <p>
-                Structure des sites web.
-            </p>
-
-        </div>
-
-
-        <div class="skill">
-
-            <h3>CSS</h3>
-
-            <p>
-                Design et animations.
-            </p>
-
-        </div>
-
-
-        <div class="skill">
-
-            <h3>JavaScript</h3>
-
-            <p>
-                Interfaces interactives.
-            </p>
-
-        </div>
-
-
-        <div class="skill">
-
-            <h3>PHP</h3>
-
-            <p>
-                Développement côté serveur.
-            </p>
-
-        </div>
-
-
-        <div class="skill">
-
-            <h3>Python</h3>
-
-            <p>
-                Programmation et logique.
-            </p>
-
-        </div>
-
-
-        <div class="skill">
-
-            <h3>MySQL</h3>
-
-            <p>
-                Bases de données.
-            </p>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     PROJECTS
-============================== -->
-
-<section id="projects">
-
-
-    <div class="section-title">
-
-        <h2>
-
-            Mes <span>projets</span>
-
-        </h2>
-
-
-        <p>
-
-            Quelques projets réalisés
-
-        </p>
-
-    </div>
-
-
-    <div class="projects-container">
-
-
-        <div class="project">
-
-            <div class="project-icon">
-                🛒
-            </div>
-
-            <h3>
-                Online Shop
-            </h3>
-
-            <p>
-
-                Site e-commerce avec
-                produits, panier et
-                système de gestion.
-
-            </p>
-
-        </div>
-
-
-        <div class="project">
-
-            <div class="project-icon">
-                📚
-            </div>
-
-            <h3>
-                Bibliothèque
-            </h3>
-
-            <p>
-
-                Site web moderne pour
-                présenter des livres.
-
-            </p>
-
-        </div>
-
-
-        <div class="project">
-
-            <div class="project-icon">
-                💼
-            </div>
-
-            <h3>
-                Portfolio
-            </h3>
-
-            <p>
-
-                Portfolio personnel
-                présentant mes compétences.
-
-            </p>
-
-        </div>
-
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     CONTACT
-============================== -->
-
-<section id="contact">
-
-
-    <div class="section-title">
-
-        <h2>
-
-            Me <span>contacter</span>
-
-        </h2>
-
-
-        <p>
-
-            Envoyez-moi un message
-
-        </p>
-
-    </div>
-
-
-    <div class="contact-box">
-
-
-        <form>
-
-            <input
-                type="text"
-                placeholder="Votre nom"
-                required
-            >
-
-
-            <input
-                type="email"
-                placeholder="Votre email"
-                required
-            >
-
-
-            <textarea
-                placeholder="Votre message"
-                required
-            ></textarea>
-
-
-            <button
-                class="btn"
-                type="submit">
-
-                Envoyer
-
-            </button>
-
-        </form>
-
-
-    </div>
-
-</section>
-
-
-<!-- ==============================
-     FOOTER
-============================== -->
-
-<footer>
-
-    © 2026
-
-    <span>
-
-        <?php echo $name; ?>
-
-    </span>
-
-    — Tous droits réservés.
-
-</footer>
-
-
-<script>
-
-/* =================================
-   TYPING ANIMATION
-================================= */
-
-const texts = [
-
-    "Développeuse Web",
-
-    "Full Stack Developer",
-
-    "Passionnée par le code",
-
-    "Future Ingénieure Informatique"
-
+// ====== MODIFIE GHIR HNA ======
+$name     = "Chaimae Salah";
+$role     = "Développeuse Full Stack";
+$school   = "ISTA NTIC Tanger";
+$email    = "chaimae@email.com";
+$github   = "https://github.com/ton-username";
+$linkedin = "https://linkedin.com/in/ton-username";
+$cv       = "/docs/cv.pdf";           // 7et CV f public/docs/
+$photo    = "/imges/photo.jpg";       // 7et tswira f public/imges/ (optionnel)
+
+$about = "Étudiante en 2ème année Développement Digital option Full Stack à l'ISTA NTIC Tanger. Je construis des applications web complètes, de l'interface jusqu'à la base de données, avec un souci du détail.";
+
+$instagram = "https://instagram.com/ton-username";
+
+// smiya => pourcentage (kun sadqa f l'arqam)
+$skills = [
+  "HTML / CSS"   => 90,
+  "JavaScript"   => 80,
+  "PHP / MySQL"  => 75,
+  "UI / UX Design" => 70,
 ];
 
+$projects = [
+  ["title" => "Projet 1", "desc" => "Application de gestion avec authentification et CRUD complet.", "tech" => ["PHP", "MySQL", "Bootstrap"], "github" => "#", "demo" => "#"],
+  ["title" => "Projet 2", "desc" => "Site e-commerce responsive avec panier et espace admin.", "tech" => ["Laravel", "JavaScript"], "github" => "#", "demo" => "#"],
+  ["title" => "Projet 3", "desc" => "Application web en temps réel avec API REST.", "tech" => ["React", "Node.js"], "github" => "#", "demo" => "#"],
+];
 
-let textIndex = 0;
-
-let charIndex = 0;
-
-
-const typing =
-    document.getElementById("typing");
-
-
-function typeEffect() {
-
-
-    if (
-        charIndex <
-        texts[textIndex].length
-    ) {
-
-
-        typing.textContent +=
-
-            texts[textIndex]
-            .charAt(charIndex);
-
-
-        charIndex++;
-
-
-        setTimeout(
-            typeEffect,
-            80
-        );
-
-
-    }
-
-    else {
-
-
-        setTimeout(
-            deleteEffect,
-            1500
-        );
-
-    }
-
+$parcours = [
+  ["2024 – 2026", "Développement Digital, option Full Stack", $school],
+  ["2025", "Stage", "Ajoute ton stage ici"],
+];
+function e($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+?>
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><?= e($name) ?> | Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#e5457f; --pink-d:#c42e68; --pink-l:#fde3ee;
+  --bg:#f4f4f6; --card:#ffffff; --ink:#2b2b33; --muted:#6f6f7a;
+  --shadow:0 8px 24px rgba(229,69,127,.12); --shadow-h:0 16px 40px rgba(229,69,127,.28);
 }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--ink);line-height:1.65}
+h1,h2,h3{font-family:'Fraunces',serif;line-height:1.15}
+a{color:inherit;text-decoration:none}
+.wrap{max-width:1040px;margin:0 auto;padding:0 22px}
+section{padding:80px 0}
+h2{font-size:2rem;margin-bottom:34px;position:relative;display:inline-block}
+h2::after{content:"";position:absolute;left:0;bottom:-8px;width:56px;height:5px;border-radius:5px;background:var(--pink);transition:width .4s}
+h2:hover::after{width:100%}
 
+/* NAV */
+nav{position:sticky;top:0;z-index:10;background:rgba(244,244,246,.85);backdrop-filter:blur(10px);box-shadow:0 2px 14px rgba(0,0,0,.06)}
+nav .wrap{display:flex;justify-content:space-between;align-items:center;height:64px}
+.logo{font-family:'Fraunces',serif;font-weight:800;font-size:1.25rem;color:var(--pink)}
+nav ul{display:flex;gap:26px;list-style:none}
+nav ul a{font-weight:700;position:relative;padding:4px 0;transition:color .25s}
+nav ul a::after{content:"";position:absolute;left:0;bottom:0;height:2px;width:0;background:var(--pink);transition:width .3s}
+nav ul a:hover{color:var(--pink)} nav ul a:hover::after{width:100%}
 
-function deleteEffect() {
+/* HERO (animation f chargement, ghir hna) */
+.hero{min-height:88vh;display:flex;align-items:center;position:relative;overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(2.4rem,6vw,4rem);font-weight:800}
+.hero h1 span{color:var(--pink)}
+.hero p.sub{margin:18px 0 30px;color:var(--muted);font-size:1.1rem;max-width:480px}
+.btns{display:flex;gap:14px;flex-wrap:wrap}
+.btn{padding:13px 28px;border-radius:50px;font-weight:700;transition:transform .25s,box-shadow .25s,background .25s;display:inline-block}
+.btn.primary{background:var(--pink);color:#fff;box-shadow:var(--shadow)}
+.btn.primary:hover{background:var(--pink-d);transform:translateY(-4px);box-shadow:var(--shadow-h)}
+.btn.ghost{border:2px solid var(--pink);color:var(--pink)}
+.btn.ghost:hover{background:var(--pink);color:#fff;transform:translateY(-4px);box-shadow:var(--shadow-h)}
+.avatar{justify-self:center;width:min(300px,70vw);aspect-ratio:1;border-radius:50% 45% 55% 50%;background:linear-gradient(135deg,var(--pink),#f7a8c6);box-shadow:var(--shadow-h);display:grid;place-items:center;overflow:hidden;animation:morph 9s ease-in-out infinite,float 5s ease-in-out infinite}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.avatar b{font-family:'Fraunces',serif;font-size:5rem;color:#fff}
+@keyframes morph{50%{border-radius:45% 55% 45% 55%}}
+@keyframes float{50%{transform:translateY(-14px)}}
+.hero .wrap>div:first-child>*{opacity:0;transform:translateY(22px);animation:in .7s forwards}
+.hero .wrap>div:first-child>*:nth-child(2){animation-delay:.15s}
+.hero .wrap>div:first-child>*:nth-child(3){animation-delay:.3s}
+.hero .wrap>div:first-child>*:nth-child(4){animation-delay:.45s}
+@keyframes in{to{opacity:1;transform:none}}
 
+/* CARDS */
+.card{background:var(--card);border-radius:18px;padding:26px;box-shadow:var(--shadow);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-8px);box-shadow:var(--shadow-h)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px}
+.tag{display:inline-block;background:var(--pink-l);color:var(--pink-d);padding:4px 13px;border-radius:30px;font-size:.85rem;font-weight:700;margin:4px 6px 0 0;transition:background .25s,color .25s,transform .25s}
+.tag:hover{background:var(--pink);color:#fff;transform:scale(1.08)}
+.card h3{margin-bottom:10px}
+.card p{color:var(--muted);margin-bottom:12px}
+.links{margin-top:16px;display:flex;gap:18px;font-weight:700;color:var(--pink)}
+.links a{transition:letter-spacing .25s}
+.links a:hover{letter-spacing:.06em;color:var(--pink-d)}
+.proj .thumb{height:140px;border-radius:12px;margin-bottom:18px;background:linear-gradient(135deg,var(--pink-l),#e4e4ea);display:grid;place-items:center;font-family:'Fraunces',serif;font-size:2.4rem;color:var(--pink);transition:transform .4s}
+.proj:hover .thumb{transform:scale(1.04)}
 
-    if (charIndex > 0) {
+/* TIMELINE */
+.tl{border-left:3px solid var(--pink-l);padding-left:26px}
+.tl .item{position:relative;margin-bottom:26px}
+.tl .item::before{content:"";position:absolute;left:-35px;top:6px;width:16px;height:16px;border-radius:50%;background:var(--pink);box-shadow:0 0 0 5px var(--pink-l);transition:transform .3s}
+.tl .item:hover::before{transform:scale(1.4)}
+.tl small{color:var(--pink-d);font-weight:700}
 
+/* CONTACT */
+/* SKILLS + CONTACT (nefss alwan: pink + gris fatih) */
+.dark h2{display:block;text-align:center}
+.dark h2::after,.dark h2:hover::after{left:50%;transform:translateX(-50%);width:80px;height:4px;background:var(--pink);box-shadow:0 0 12px rgba(229,69,127,.45)}
+.bar{margin-bottom:30px}
+.bar .top{display:flex;justify-content:space-between;margin-bottom:8px;font-weight:700}
+.track{height:14px;background:#e4e4ea;border-radius:20px;overflow:hidden}
+.fill{height:100%;width:0;border-radius:20px;background:linear-gradient(90deg,#f08bb1,var(--pink));box-shadow:0 0 14px rgba(229,69,127,.45);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.show .fill{width:var(--w)}
+form.cf{max-width:560px;margin:0 auto;display:grid;gap:18px}
+.cf input,.cf textarea{width:100%;background:var(--card);border:1px solid #dcdce3;border-radius:16px;padding:16px 20px;color:var(--ink);font:inherit;box-shadow:var(--shadow);transition:border-color .25s,box-shadow .25s}
+.cf textarea{min-height:140px;resize:vertical}
+.cf input::placeholder,.cf textarea::placeholder{color:#9a9aa5}
+.cf input:focus,.cf textarea:focus{outline:none;border-color:var(--pink);box-shadow:0 0 0 3px rgba(229,69,127,.2)}
+.cf button{border:0;cursor:pointer;background:var(--pink);color:#fff;font:700 1rem 'Nunito',sans-serif;padding:15px;border-radius:50px;box-shadow:var(--shadow);transition:transform .25s,box-shadow .25s,background .25s}
+.cf button:hover{background:var(--pink-d);transform:translateY(-4px);box-shadow:var(--shadow-h)}
+footer.dark{border-top:1px solid #dcdce3;padding:34px 22px;display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+footer.dark a{border:2px solid var(--pink);color:var(--pink);font-weight:700;padding:9px 26px;border-radius:50px;transition:background .25s,color .25s,box-shadow .25s,transform .25s}
+footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h);transform:translateY(-4px)}
 
-        typing.textContent =
+/* Reveal au scroll */
+.rv{opacity:0;transform:translateY(30px);transition:opacity .7s,transform .7s}
+.rv.show{opacity:1;transform:none}
 
-            texts[textIndex]
-            .substring(
-                0,
-                charIndex - 1
-            );
-
-
-        charIndex--;
-
-
-        setTimeout(
-            deleteEffect,
-            50
-        );
-
-
-    }
-
-    else {
-
-
-        textIndex++;
-
-
-        if (
-            textIndex >=
-            texts.length
-        ) {
-
-            textIndex = 0;
-
-        }
-
-
-        setTimeout(
-            typeEffect,
-            300
-        );
-
-    }
-
+:focus-visible{outline:3px solid var(--pink);outline-offset:3px}
+@media(max-width:760px){
+  .hero .wrap{grid-template-columns:1fr;text-align:center}
+  .hero p.sub{margin-inline:auto}.btns{justify-content:center}
+  .avatar{order:-1;width:200px}
+  nav ul{gap:14px;font-size:.9rem}.logo{display:none}
 }
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}.rv,.hero .wrap>div:first-child>*{opacity:1;transform:none}}
+</style>
+</head>
+<body>
 
+<nav><div class="wrap">
+  <a href="#top" class="logo"><?= e($name) ?></a>
+  <ul>
+    <li><a href="#apropos">À propos</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#projets">Projets</a></li>
+    <li><a href="#parcours">Parcours</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</div></nav>
 
-typeEffect();
+<header class="hero" id="top"><div class="wrap">
+  <div>
+    <p style="color:var(--pink-d);font-weight:700">Salut, je suis</p>
+    <h1><?= e($name) ?><br><span><?= e($role) ?></span></h1>
+    <p class="sub">Étudiante à <?= e($school) ?>. Je crée des sites et applications web complets, du design à la base de données.</p>
+    <div class="btns">
+      <a class="btn primary" href="#projets">Voir mes projets</a>
+      <a class="btn ghost" href="<?= e($cv) ?>" download>Télécharger mon CV</a>
+    </div>
+  </div>
+  <div class="avatar">
+    <?php if (file_exists(__DIR__ . '/../public' . $photo)): ?>
+      <img src="<?= e($photo) ?>" alt="<?= e($name) ?>">
+    <?php else: ?>
+      <b><?= e(mb_substr($name, 0, 1)) ?></b>
+    <?php endif; ?>
+  </div>
+</div></header>
 
+<section id="apropos"><div class="wrap rv">
+  <h2>À propos</h2>
+  <div class="card"><p style="margin:0;font-size:1.05rem;color:var(--ink)"><?= e($about) ?></p></div>
+</div></section>
 
-/* =================================
-   SCROLL ANIMATION
-================================= */
+<section id="skills" class="dark"><div class="wrap rv">
+  <h2>Skills</h2>
+  <?php foreach ($skills as $label => $pct): ?>
+    <div class="bar">
+      <div class="top"><span><?= e($label) ?></span><span><?= (int)$pct ?>%</span></div>
+      <div class="track"><div class="fill" style="--w:<?= (int)$pct ?>%"></div></div>
+    </div>
+  <?php endforeach; ?>
+</div></section>
 
-const elements =
+<section id="projets"><div class="wrap rv">
+  <h2>Projets</h2>
+  <div class="grid">
+    <?php foreach ($projects as $p): ?>
+      <article class="card proj">
+        <div class="thumb"><?= e(mb_substr($p['title'], 0, 1)) ?></div>
+        <h3><?= e($p['title']) ?></h3>
+        <p><?= e($p['desc']) ?></p>
+        <?php foreach ($p['tech'] as $t): ?><span class="tag"><?= e($t) ?></span><?php endforeach; ?>
+        <div class="links">
+          <a href="<?= e($p['github']) ?>" target="_blank" rel="noopener">GitHub</a>
+          <a href="<?= e($p['demo']) ?>" target="_blank" rel="noopener">Démo</a>
+        </div>
+      </article>
+    <?php endforeach; ?>
+  </div>
+</div></section>
 
-    document.querySelectorAll(
-        ".skill, .project, .about-box"
-    );
+<section id="parcours"><div class="wrap rv">
+  <h2>Parcours</h2>
+  <div class="tl">
+    <?php foreach ($parcours as $x): ?>
+      <div class="item"><small><?= e($x[0]) ?></small><h3><?= e($x[1]) ?></h3><p style="color:var(--muted)"><?= e($x[2]) ?></p></div>
+    <?php endforeach; ?>
+  </div>
+</div></section>
 
+<section id="contact" class="dark"><div class="wrap rv">
+  <h2>Contact</h2>
+  <form class="cf" id="cf">
+    <input type="text" id="cn" placeholder="Smitek" required>
+    <input type="email" id="ce" placeholder="Email dyalek" required>
+    <textarea id="cm" placeholder="Message dyalek" required></textarea>
+    <button type="submit">Sift message</button>
+  </form>
+</div></section>
 
-const observer =
+<footer class="dark">
+  <a href="<?= e($github) ?>" target="_blank" rel="noopener">GitHub</a>
+  <a href="<?= e($linkedin) ?>" target="_blank" rel="noopener">LinkedIn</a>
+  <a href="<?= e($instagram) ?>" target="_blank" rel="noopener">Instagram</a>
+</footer>
 
-    new IntersectionObserver(
-
-        entries => {
-
-
-            entries.forEach(
-                entry => {
-
-
-                    if (
-                        entry.isIntersecting
-                    ) {
-
-
-                        entry.target.style.opacity =
-                            "1";
-
-
-                        entry.target.style.transform =
-                            "translateY(0)";
-
-                    }
-
-                }
-            );
-
-        },
-
-        {
-            threshold: 0.2
-        }
-
-    );
-
-
-elements.forEach(
-    element => {
-
-
-        element.style.opacity =
-            "0";
-
-
-        element.style.transform =
-            "translateY(40px)";
-
-
-        element.style.transition =
-            "0.7s";
-
-
-        observer.observe(element);
-
-    }
-);
-
+<script>
+// Kayft'7 l'email app b message m3emmer (bla backend)
+document.getElementById('cf').addEventListener('submit',function(ev){
+  ev.preventDefault();
+  const n=document.getElementById('cn').value,m=document.getElementById('ce').value,t=document.getElementById('cm').value;
+  location.href='mailto:<?= e($email) ?>?subject='+encodeURIComponent('Message mn '+n)+'&body='+encodeURIComponent(t+'\n\n'+n+' ('+m+')');
+});
+const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('show');io.unobserve(x.target)}}),{threshold:.12});
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
 </script>
-
-
 </body>
-
 </html>

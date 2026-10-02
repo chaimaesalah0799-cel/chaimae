@@ -1,4 +1,5 @@
 <?php
+header('Cache-Control: no-cache, must-revalidate'); // bach dima yban l'version jdida
 // ====== MODIFIE GHIR HNA ======
 $name     = "Chaimae Salah";
 $role     = "Développeuse Full Stack";

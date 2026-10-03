@@ -224,9 +224,9 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   <ul>
     <li><a href="#apropos"><?= t('À propos', 'About') ?></a></li>
     <li><a href="#skills"><?= t('Compétences', 'Skills') ?></a></li>
-    <li><a href="#projets"><?= t('Projets', 'Projects') ?></a></li>
     <li><a href="#langues"><?= t('Langues', 'Languages') ?></a></li>
     <li><a href="#parcours"><?= t('Parcours', 'Education') ?></a></li>
+    <li><a href="#projets"><?= t('Projets', 'Projects') ?></a></li>
     <li><a href="#contact"><?= t('Contact') ?></a></li>
   </ul>
   <button class="lg" type="button" onclick="toggleLang()" aria-label="Français / English" title="Français / English"><span class="l-fr">FR</span> | <span class="l-en">EN</span></button>
@@ -268,24 +268,6 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   <?php endforeach; ?>
 </div></section>
 
-<section id="projets"><div class="wrap rv">
-  <h2><?= t('Projets', 'Projects') ?></h2>
-  <div class="grid">
-    <?php foreach ($projects as $p): ?>
-      <article class="card proj">
-        <div class="thumb"><?= e(mb_substr(strip_tags($p['title']), 0, 1)) ?></div>
-        <h3><?= $p['title'] ?></h3>
-        <p><?= $p['desc'] ?></p>
-        <?php foreach ($p['tech'] as $t): ?><span class="tag"><?= e($t) ?></span><?php endforeach; ?>
-        <div class="links">
-          <a href="<?= e($p['github']) ?>" target="_blank" rel="noopener">GitHub</a>
-          <a href="<?= e($p['demo']) ?>" target="_blank" rel="noopener"><?= t('Démo', 'Demo') ?></a>
-        </div>
-      </article>
-    <?php endforeach; ?>
-  </div>
-</div></section>
-
 <section id="langues"><div class="wrap rv">
   <h2><?= t('Langues', 'Languages') ?></h2>
   <div class="grid">
@@ -307,6 +289,24 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   <div class="tl">
     <?php foreach ($parcours as $x): ?>
       <div class="item"><small><?= e($x[0]) ?></small><h3><?= $x[1] ?></h3><p style="color:var(--muted)"><?= $x[2] ?></p></div>
+    <?php endforeach; ?>
+  </div>
+</div></section>
+
+<section id="projets"><div class="wrap rv">
+  <h2><?= t('Projets', 'Projects') ?></h2>
+  <div class="grid">
+    <?php foreach ($projects as $p): ?>
+      <article class="card proj">
+        <div class="thumb"><?= e(mb_substr(strip_tags($p['title']), 0, 1)) ?></div>
+        <h3><?= $p['title'] ?></h3>
+        <p><?= $p['desc'] ?></p>
+        <?php foreach ($p['tech'] as $t): ?><span class="tag"><?= e($t) ?></span><?php endforeach; ?>
+        <div class="links">
+          <a href="<?= e($p['github']) ?>" target="_blank" rel="noopener">GitHub</a>
+          <a href="<?= e($p['demo']) ?>" target="_blank" rel="noopener"><?= t('Démo', 'Demo') ?></a>
+        </div>
+      </article>
     <?php endforeach; ?>
   </div>
 </div></section>

@@ -42,6 +42,13 @@ $projects = [
   ["title" => t("Projet 3", "Project 3"), "desc" => t("Application web en temps réel avec API REST.", "Real-time web application with a REST API."), "tech" => ["React", "Node.js"], "github" => "#", "demo" => "#"],
 ];
 
+// Les langues: level = men 1 l 5 (bdlo b rassek ila t7assnti)
+$languages = [
+  ["name" => t("Arabe", "Arabic"),    "native" => "العربية", "lang" => "ar", "status" => t("Langue maternelle", "Native language"),          "level" => 5],
+  ["name" => t("Français", "French"), "native" => "Français", "lang" => "fr", "status" => t("En cours d'apprentissage", "Currently learning"), "level" => 3],
+  ["name" => t("Anglais", "English"), "native" => "English",  "lang" => "en", "status" => t("En cours d'apprentissage", "Currently learning"), "level" => 3],
+];
+
 $parcours = [
   ["2024 – 2026", t("Développement Digital, option Full Stack", "Digital Development, Full Stack option"), t($school)],
   ["2025", t("Stage", "Internship"), t("Ajoute ton stage ici", "Add your internship here")],
@@ -98,6 +105,13 @@ body,nav,.card,.cf input,.cf textarea{transition:background-color .4s,color .4s,
 .lg{flex-shrink:0;height:44px;padding:0 14px;border-radius:50px;border:0;cursor:pointer;background:var(--card);box-shadow:var(--shadow);font:700 .85rem 'Nunito',sans-serif;color:var(--muted);transition:transform .3s,box-shadow .3s,background-color .4s}
 .lg:hover{transform:translateY(-3px);box-shadow:var(--shadow-h)}
 html[lang="fr"] .l-fr,html[lang="en"] .l-en{color:var(--pink)}
+.lang-card .native{font-family:'Fraunces',serif;font-size:1.7rem;color:var(--pink);margin-bottom:4px}
+.lang-card h3{font-size:1.1rem}
+.dots{margin-top:14px}
+.dots span{display:inline-block;width:13px;height:13px;border-radius:50%;background:var(--track);margin-right:7px;transform:scale(0);transition:transform .4s cubic-bezier(.3,1.6,.5,1)}
+.dots span.on{background:var(--pink);box-shadow:0 0 8px rgba(229,69,127,.5)}
+.show .dots span{transform:scale(1)}
+.dots span:nth-child(2){transition-delay:.1s}.dots span:nth-child(3){transition-delay:.2s}.dots span:nth-child(4){transition-delay:.3s}.dots span:nth-child(5){transition-delay:.4s}
 .ic-sun{display:none}
 [data-theme="dark"] .ic-moon{display:none}
 [data-theme="dark"] .ic-sun{display:inline}
@@ -211,6 +225,7 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
     <li><a href="#apropos"><?= t('À propos', 'About') ?></a></li>
     <li><a href="#skills"><?= t('Compétences', 'Skills') ?></a></li>
     <li><a href="#projets"><?= t('Projets', 'Projects') ?></a></li>
+    <li><a href="#langues"><?= t('Langues', 'Languages') ?></a></li>
     <li><a href="#parcours"><?= t('Parcours', 'Education') ?></a></li>
     <li><a href="#contact"><?= t('Contact') ?></a></li>
   </ul>
@@ -267,6 +282,22 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
           <a href="<?= e($p['demo']) ?>" target="_blank" rel="noopener"><?= t('Démo', 'Demo') ?></a>
         </div>
       </article>
+    <?php endforeach; ?>
+  </div>
+</div></section>
+
+<section id="langues"><div class="wrap rv">
+  <h2><?= t('Langues', 'Languages') ?></h2>
+  <div class="grid">
+    <?php foreach ($languages as $l): ?>
+      <div class="card lang-card">
+        <div class="native" lang="<?= e($l['lang']) ?>"><?= e($l['native']) ?></div>
+        <h3><?= $l['name'] ?></h3>
+        <p style="margin:6px 0 0"><?= $l['status'] ?></p>
+        <div class="dots">
+          <?php for ($i = 1; $i <= 5; $i++): ?><span class="<?= $i <= $l['level'] ? 'on' : '' ?>"></span><?php endfor; ?>
+        </div>
+      </div>
     <?php endforeach; ?>
   </div>
 </div></section>

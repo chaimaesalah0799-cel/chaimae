@@ -1,7 +1,7 @@
 <?php
 header('Cache-Control: no-cache, must-revalidate');
 // ?page=modules => page dyal les modules, sinon l'page principale
-$page = in_array($_GET['page'] ?? '', ['modules'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
+$page = in_array($_GET['page'] ?? '', ['modules', 'agile'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
 // ====== MODIFIE GHIR HNA ======
 $name     = "Chaimae Salah";
 // t("francais", "english") : kaykteb nefss l'texte b joj loghat. L'site kaybdl bin FR w EN.
@@ -41,7 +41,7 @@ $skills = [
 // Les modules li kat9ra (bdl smiyat w descriptions b rassek)
 $modules = [
   ["code" => "M201", "hours" => 60,  "name" => t("Préparation d'un projet web", "Preparing a web project")],
-  ["code" => "M202", "hours" => 120, "name" => t("Approche agile", "Agile approach"), "page" => "/api/agix.php"],   // "page" => l'lien l page dyalo
+  ["code" => "M202", "hours" => 120, "name" => t("Approche agile", "Agile approach"), "page" => "agile"],   // "page" => l'lien l page dyalo
   ["code" => "M203", "hours" => 90,  "name" => t("Gestion des données", "Data management")],
   ["code" => "M204", "hours" => 90,  "name" => t("Développement front-end", "Front-end development")],
   ["code" => "M205", "hours" => 120, "name" => t("Développement back-end", "Back-end development")],
@@ -49,7 +49,20 @@ $modules = [
   ["code" => "M207", "hours" => 60,  "name" => t("Projet de synthèse", "Capstone project")],
 ];
 
-
+// Page "Approche agile": cours w TP (hado ghir amthila, bdlhom b dyalek; "link" => lien dyal PDF wla page)
+$agile = [
+  "cours" => [
+    ["title" => t("Introduction à l'agilité", "Introduction to agility"), "link" => "#"],
+    ["title" => t("Scrum : rôles, événements, artefacts", "Scrum: roles, events, artifacts"), "link" => "#"],
+    ["title" => t("Kanban", "Kanban"), "link" => "#"],
+    ["title" => t("User stories et backlog", "User stories and backlog"), "link" => "#"],
+  ],
+  "tp" => [
+    ["title" => t("TP 1 : Créer un backlog", "Lab 1: Create a backlog"), "link" => "#"],
+    ["title" => t("TP 2 : Planifier un sprint", "Lab 2: Plan a sprint"), "link" => "#"],
+    ["title" => t("TP 3 : Tableau Kanban", "Lab 3: Kanban board"), "link" => "#"],
+  ],
+];
 
 // Les langues: level = men 1 l 5 (bdlo b rassek ila t7assnti)
 $languages = [
@@ -269,10 +282,32 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
         <h3><?= $m['name'] ?></h3>
         <span class="tag"><?= (int)$m['hours'] ?> h</span>
         <?php if (!empty($m['page'])): ?>
-          <div class="links"><a href="<?= e($m['page']) ?>"><?= t('Voir le module', 'View module') ?></a></div>
+          <div class="links"><a href="/?page=<?= e($m['page']) ?>"><?= t('Voir le module', 'View module') ?></a></div>
         <?php endif; ?>
       </article>
     <?php endforeach; ?>
+  </div>
+</div></section>
+
+<?php elseif ($page === 'agile'): ?>
+<!-- ===== PAGE APPROCHE AGILE (M202) ===== -->
+<section style="padding-top:50px"><div class="wrap rv">
+  <a class="back" href="/?page=modules">&larr; <?= t('Retour aux modules', 'Back to modules') ?></a><br>
+  <h2><?= t('Approche agile', 'Agile approach') ?></h2>
+  <p style="color:var(--muted);margin-bottom:30px">M202 &middot; 120 h</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="badge"><?= t('Cours', 'Lessons') ?></div>
+      <div class="rows">
+        <?php foreach ($agile['cours'] as $c): ?><a href="<?= e($c['link']) ?>"><span><?= $c['title'] ?></span></a><?php endforeach; ?>
+      </div>
+    </div>
+    <div class="card">
+      <div class="badge"><?= t('TP', 'Labs (TP)') ?></div>
+      <div class="rows">
+        <?php foreach ($agile['tp'] as $c): ?><a href="<?= e($c['link']) ?>"><span><?= $c['title'] ?></span></a><?php endforeach; ?>
+      </div>
+    </div>
   </div>
 </div></section>
 

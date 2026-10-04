@@ -2,6 +2,7 @@
 header('Cache-Control: no-cache, must-revalidate');
 // ?page=modules => page dyal les modules, sinon l'page principale
 $page = in_array($_GET['page'] ?? '', ['modules', 'agile'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
+$view = in_array($_GET['view'] ?? '', ['cours', 'tp'], true) ? $_GET['view'] : '';   // ?page=agile&view=tp => galerie dyal TP
 // ====== MODIFIE GHIR HNA ======
 $name     = "Chaimae Salah";
 // t("francais", "english") : kaykteb nefss l'texte b joj loghat. L'site kaybdl bin FR w EN.
@@ -49,19 +50,12 @@ $modules = [
   ["code" => "M207", "hours" => 60,  "name" => t("Projet de synthèse", "Capstone project")],
 ];
 
-// Page "Approche agile": cours w TP (hado ghir amthila, bdlhom b dyalek; "link" => lien dyal PDF wla page)
+// Page "Approche agile": tswar dyal l'cours w l'TP
+// 7ett tswar f: public/imges/agile/cours/  w  public/imges/agile/tp/
+// L'site kay9ra l'tswar b rasso. Ila ma khdamch, ktbi smiyatthom hna, mital: ["tp1.png", "tp2.png"]
 $agile = [
-  "cours" => [
-    ["title" => t("Introduction à l'agilité", "Introduction to agility"), "link" => "#"],
-    ["title" => t("Scrum : rôles, événements, artefacts", "Scrum: roles, events, artifacts"), "link" => "#"],
-    ["title" => t("Kanban", "Kanban"), "link" => "#"],
-    ["title" => t("User stories et backlog", "User stories and backlog"), "link" => "#"],
-  ],
-  "tp" => [
-    ["title" => t("TP 1 : Créer un backlog", "Lab 1: Create a backlog"), "link" => "#"],
-    ["title" => t("TP 2 : Planifier un sprint", "Lab 2: Plan a sprint"), "link" => "#"],
-    ["title" => t("TP 3 : Tableau Kanban", "Lab 3: Kanban board"), "link" => "#"],
-  ],
+  "cours" => [],
+  "tp"    => [],
 ];
 
 // Les langues: level = men 1 l 5 (bdlo b rassek ila t7assnti)
@@ -75,6 +69,12 @@ $parcours = [
   ["2024 – 2026", t("Développement Digital, option Full Stack", "Digital Development, Full Stack option"), t($school)],
   ["2025", t("Stage", "Internship"), t("Ajoute ton stage ici", "Add your internship here")],
 ];
+function agile_imgs($k){
+  global $agile;
+  $found = glob(__DIR__ . '/../public/imges/agile/' . $k . '/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', GLOB_BRACE) ?: [];
+  if ($found) { sort($found); return array_map('basename', $found); }
+  return $agile[$k];
+}
 function e($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 ?>
 <!DOCTYPE html>
@@ -147,6 +147,21 @@ html[lang="fr"] .l-fr,html[lang="en"] .l-en{color:var(--pink)}
 .rows a:last-child{border-bottom:0}
 .rows a:hover{color:var(--pink);padding-left:12px}
 .rows a::after{content:"\2192";color:var(--pink)}
+.big{text-align:center;padding:38px 28px}
+.ico{width:96px;height:96px;border-radius:28px;margin:0 auto 20px;display:grid;place-items:center;color:var(--pink);background:linear-gradient(135deg,var(--pink-l),transparent);box-shadow:inset 0 0 0 2px var(--pink-l);transition:transform .45s,background-color .3s}
+.ico svg{width:46px;height:46px}
+.card:hover .ico{transform:rotate(-6deg) scale(1.1)}
+.big h3{font-size:1.6rem}
+.big .btn{margin-top:6px}
+.gal{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:22px}
+.gal figure{border-radius:18px;overflow:hidden;background:var(--card);box-shadow:var(--shadow);cursor:zoom-in;transition:transform .3s,box-shadow .3s}
+.gal figure:hover{transform:translateY(-6px);box-shadow:var(--shadow-h)}
+.gal img{width:100%;display:block;aspect-ratio:4/3;object-fit:cover;transition:transform .5s}
+.gal figure:hover img{transform:scale(1.06)}
+.gal figcaption{padding:12px 16px;font-weight:700}
+#lb{position:fixed;inset:0;background:rgba(0,0,0,.88);display:none;place-items:center;z-index:50;cursor:zoom-out;padding:20px}
+#lb.on{display:grid}
+#lb img{max-width:100%;max-height:100%;border-radius:12px}
 .ic-sun{display:none}
 [data-theme="dark"] .ic-moon{display:none}
 [data-theme="dark"] .ic-sun{display:inline}
@@ -289,6 +304,27 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   </div>
 </div></section>
 
+<?php elseif ($page === 'agile' && $view): ?>
+<!-- ===== GALERIE : COURS ou TP (tswar) ===== -->
+<?php $imgs = agile_imgs($view); $isTp = ($view === 'tp'); ?>
+<section style="padding-top:50px"><div class="wrap rv">
+  <a class="back" href="/?page=agile">&larr; <?= t('Retour', 'Back') ?></a><br>
+  <h2><?= $isTp ? t('TP', 'Labs (TP)') : t('Cours', 'Lessons') ?> &middot; <?= t('Approche agile', 'Agile approach') ?></h2>
+  <?php if ($imgs): ?>
+    <div class="gal">
+      <?php foreach ($imgs as $i => $f): ?>
+        <figure>
+          <img src="/imges/agile/<?= e($view) ?>/<?= e(rawurlencode($f)) ?>" alt="<?= $isTp ? 'TP' : 'Cours' ?> <?= $i + 1 ?>" loading="lazy">
+          <figcaption><?= $isTp ? 'TP' : 'Cours' ?> <?= $i + 1 ?></figcaption>
+        </figure>
+      <?php endforeach; ?>
+    </div>
+  <?php else: ?>
+    <div class="card"><p style="margin:0"><?= t("Pas encore d'images. Ajoute-les dans public/imges/agile/$view/", "No images yet. Add them in public/imges/agile/$view/") ?></p></div>
+  <?php endif; ?>
+</div></section>
+<div id="lb"><img alt=""></div>
+
 <?php elseif ($page === 'agile'): ?>
 <!-- ===== PAGE APPROCHE AGILE (M202) ===== -->
 <section style="padding-top:50px"><div class="wrap rv">
@@ -296,18 +332,26 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   <h2><?= t('Approche agile', 'Agile approach') ?></h2>
   <p style="color:var(--muted);margin-bottom:30px">M202 &middot; 120 h</p>
   <div class="grid2">
-    <div class="card">
-      <div class="badge"><?= t('Cours', 'Lessons') ?></div>
-      <div class="rows">
-        <?php foreach ($agile['cours'] as $c): ?><a href="<?= e($c['link']) ?>"><span><?= $c['title'] ?></span></a><?php endforeach; ?>
+    <?php
+    $cards = [
+      ['cours', t('Cours', 'Lessons'), t('Les supports de cours du module.', 'The course materials of the module.'), t('Voir le cours', 'View lessons')],
+      ['tp',    t('TP', 'Labs (TP)'),  t('Les travaux pratiques, en images.', 'The practical work, as images.'),    t('Voir le TP', 'View labs')],
+    ];
+    foreach ($cards as $c): $n = count(agile_imgs($c[0])); ?>
+      <div class="card big">
+        <div class="ico">
+          <?php if ($c[0] === 'cours'): ?>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 19V5.5"/><path d="M9 7h7M9 11h5"/></svg>
+          <?php else: ?>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/><path d="M10 8.5 8 10.5l2 2M14 8.5l2 2-2 2"/></svg>
+          <?php endif; ?>
+        </div>
+        <h3><?= $c[1] ?></h3>
+        <p><?= $c[2] ?></p>
+        <?php if ($n): ?><span class="tag"><?= $n ?> images</span><br><?php endif; ?>
+        <a class="btn primary" href="/?page=agile&amp;view=<?= e($c[0]) ?>"><?= $c[3] ?></a>
       </div>
-    </div>
-    <div class="card">
-      <div class="badge"><?= t('TP', 'Labs (TP)') ?></div>
-      <div class="rows">
-        <?php foreach ($agile['tp'] as $c): ?><a href="<?= e($c['link']) ?>"><span><?= $c['title'] ?></span></a><?php endforeach; ?>
-      </div>
-    </div>
+    <?php endforeach; ?>
   </div>
 </div></section>
 
@@ -409,6 +453,11 @@ if(cfEl)cfEl.addEventListener('submit',function(ev){
 });
 const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('show');io.unobserve(x.target)}}),{threshold:.12});
 document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+var lb=document.getElementById('lb');
+if(lb){
+  document.querySelectorAll('.gal img').forEach(function(im){im.addEventListener('click',function(){lb.querySelector('img').src=im.src;lb.classList.add('on')})});
+  lb.addEventListener('click',function(){lb.classList.remove('on')});
+}
 setLang(document.documentElement.lang); // applique la langue sauvegardée
 </script>
 </body>

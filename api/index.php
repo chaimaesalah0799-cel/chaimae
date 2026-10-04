@@ -41,7 +41,7 @@ $skills = [
 // Les modules li kat9ra (bdl smiyat w descriptions b rassek)
 $modules = [
   ["code" => "M201", "hours" => 60,  "name" => t("Préparation d'un projet web", "Preparing a web project")],
-  ["code" => "M202", "hours" => 120, "name" => t("Approche agile", "Agile approach"), "page" => "/agix"],   // "page" => l'lien l page dyalo
+  ["code" => "M202", "hours" => 120, "name" => t("Approche agile", "Agile approach"), "page" => "/api/agix.php"],   // "page" => l'lien l page dyalo
   ["code" => "M203", "hours" => 90,  "name" => t("Gestion des données", "Data management")],
   ["code" => "M204", "hours" => 90,  "name" => t("Développement front-end", "Front-end development")],
   ["code" => "M205", "hours" => 120, "name" => t("Développement back-end", "Back-end development")],

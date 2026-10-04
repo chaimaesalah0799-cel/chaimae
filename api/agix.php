@@ -1,68 +1,33 @@
 <?php
 header('Cache-Control: no-cache, must-revalidate');
-// ?page=modules => page dyal les modules, sinon l'page principale
-$page = in_array($_GET['page'] ?? '', ['modules'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
-// ====== MODIFIE GHIR HNA ======
+// ====== Page "Approche agile" (M202) : cours w TP ======
+// Nefss l'ma3lumat dyal index.php (ila bdlti chi haja hna, bdliha f index.php tani)
 $name     = "Chaimae Salah";
-// t("francais", "english") : kaykteb nefss l'texte b joj loghat. L'site kaybdl bin FR w EN.
+$email    = "chaimae@email.com";
+$github   = "https://github.com/ton-username";
+$linkedin = "https://linkedin.com/in/ton-username";
+$instagram = "https://instagram.com/ton-username";
+
 function t($fr, $en = null){
   $en = $en ?? $fr;
   return '<span data-fr="'.htmlspecialchars($fr, ENT_QUOTES, 'UTF-8').'" data-en="'.htmlspecialchars($en, ENT_QUOTES, 'UTF-8').'">'.htmlspecialchars($fr, ENT_QUOTES, 'UTF-8').'</span>';
 }
-// ph("francais", "english") : nefss l'haja l placeholder dyal l'inputs
-function ph($fr, $en){
-  $f = htmlspecialchars($fr, ENT_QUOTES, 'UTF-8'); $n = htmlspecialchars($en, ENT_QUOTES, 'UTF-8');
-  return 'placeholder="'.$f.'" data-ph-fr="'.$f.'" data-ph-en="'.$n.'"';
-}
-
-$role     = t("Développeuse Full Stack", "Full Stack Developer");
-$school   = "ISTA NTIC Tanger";   // smiya dyal l'madrasa (b7al b7al f joj loghat)
-$email    = "chaimae@email.com";
-$github   = "https://github.com/ton-username";
-$linkedin = "https://linkedin.com/in/ton-username";
-$cv       = "/docs/cv.pdf";           // 7et CV f public/docs/
-$photo    = "/imges/photo.jpg";       // 7et tswira f public/imges/ (optionnel)
-
-$about = t(
-  "Étudiante en 2ème année Développement Digital option Full Stack à l'ISTA NTIC Tanger. Je construis des applications web complètes, de l'interface jusqu'à la base de données, avec un souci du détail.",
-  "Second-year Digital Development student, Full Stack option, at ISTA NTIC Tangier. I build complete web applications, from the interface to the database, with attention to detail."
-);
-
-$instagram = "https://instagram.com/ton-username";
-
-// smiya => pourcentage (kun sadqa f l'arqam)
-$skills = [
-  "HTML / CSS"   => 90,
-  "JavaScript"   => 80,
-  "PHP / MySQL"  => 75,
-  "UI / UX Design" => 70,
-];
-
-// Les modules li kat9ra (bdl smiyat w descriptions b rassek)
-$modules = [
-  ["code" => "M201", "hours" => 60,  "name" => t("Préparation d'un projet web", "Preparing a web project")],
-  ["code" => "M202", "hours" => 120, "name" => t("Approche agile", "Agile approach"), "page" => "/agix"],   // "page" => l'lien l page dyalo
-  ["code" => "M203", "hours" => 90,  "name" => t("Gestion des données", "Data management")],
-  ["code" => "M204", "hours" => 90,  "name" => t("Développement front-end", "Front-end development")],
-  ["code" => "M205", "hours" => 120, "name" => t("Développement back-end", "Back-end development")],
-  ["code" => "M206", "hours" => 90,  "name" => t("Création d'une application Cloud native", "Building a cloud-native application")],
-  ["code" => "M207", "hours" => 60,  "name" => t("Projet de synthèse", "Capstone project")],
-];
-
-
-
-// Les langues: level = men 1 l 5 (bdlo b rassek ila t7assnti)
-$languages = [
-  ["name" => t("Arabe", "Arabic"),    "native" => "العربية", "lang" => "ar", "status" => t("Langue maternelle", "Native language"),          "level" => 5],
-  ["name" => t("Français", "French"), "native" => "Français", "lang" => "fr", "status" => t("En cours d'apprentissage", "Currently learning"), "level" => 3],
-  ["name" => t("Anglais", "English"), "native" => "English",  "lang" => "en", "status" => t("En cours d'apprentissage", "Currently learning"), "level" => 3],
-];
-
-$parcours = [
-  ["2024 – 2026", t("Développement Digital, option Full Stack", "Digital Development, Full Stack option"), t($school)],
-  ["2025", t("Stage", "Internship"), t("Ajoute ton stage ici", "Add your internship here")],
-];
 function e($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
+
+// Page "Approche agile": cours w TP (hado ghir amthila, bdlhom b dyalek; "link" => lien dyal PDF wla page)
+$agile = [
+  "cours" => [
+    ["title" => t("Introduction à l'agilité", "Introduction to agility"), "link" => "#"],
+    ["title" => t("Scrum : rôles, événements, artefacts", "Scrum: roles, events, artifacts"), "link" => "#"],
+    ["title" => t("Kanban", "Kanban"), "link" => "#"],
+    ["title" => t("User stories et backlog", "User stories and backlog"), "link" => "#"],
+  ],
+  "tp" => [
+    ["title" => t("TP 1 : Créer un backlog", "Lab 1: Create a backlog"), "link" => "#"],
+    ["title" => t("TP 2 : Planifier un sprint", "Lab 2: Plan a sprint"), "link" => "#"],
+    ["title" => t("TP 3 : Tableau Kanban", "Lab 3: Kanban board"), "link" => "#"],
+  ],
+];
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -89,7 +54,7 @@ function toggleTheme(){
   try{dark?localStorage.removeItem('theme'):localStorage.setItem('theme','dark')}catch(e){}
 }
 </script>
-<title><?= e($name) ?> | Portfolio</title>
+<title>Approche agile | <?= e($name) ?></title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600;800&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
@@ -256,107 +221,27 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   </div>
 </div></nav>
 
-<?php if ($page === 'modules'): ?>
-<!-- ===== PAGE MODULES ===== -->
+<!-- ===== PAGE APPROCHE AGILE (M202) ===== -->
 <section style="padding-top:50px"><div class="wrap rv">
-  <a class="back" href="/#modules">&larr; <?= t('Retour', 'Back') ?></a><br>
-  <h2><?= t('Mes modules', 'My modules') ?></h2>
-  <p style="color:var(--muted);margin-bottom:30px"><?= t("Les modules que j'étudie en Développement Digital, option Full Stack.", "The modules I study in Digital Development, Full Stack option.") ?></p>
-  <div class="grid">
-    <?php foreach ($modules as $m): ?>
-      <article class="card">
-        <div class="badge"><?= e($m['code']) ?></div>
-        <h3><?= $m['name'] ?></h3>
-        <span class="tag"><?= (int)$m['hours'] ?> h</span>
-        <?php if (!empty($m['page'])): ?>
-          <div class="links"><a href="<?= e($m['page']) ?>"><?= t('Voir le module', 'View module') ?></a></div>
-        <?php endif; ?>
-      </article>
-    <?php endforeach; ?>
-  </div>
-</div></section>
-
-<?php else: ?>
-<!-- ===== PAGE PRINCIPALE ===== -->
-
-<header class="hero" id="top"><div class="wrap">
-  <div>
-    <p style="color:var(--pink-d);font-weight:700"><?= t('Salut, je suis', "Hi, I'm") ?></p>
-    <h1><?= e($name) ?><br><span><?= $role ?></span></h1>
-    <p class="sub"><?= t("Étudiante à $school. Je crée des sites et applications web complets, du design à la base de données.", "Student at $school. I build complete websites and web apps, from design to database.") ?></p>
-    <div class="btns">
-      <a class="btn primary" href="#modules"><?= t('Voir mes modules', 'View my modules') ?></a>
-      <a class="btn ghost" href="<?= e($cv) ?>" download><?= t('Télécharger mon CV', 'Download my CV') ?></a>
-    </div>
-  </div>
-  <div class="avatar">
-    <?php if (file_exists(__DIR__ . '/../public' . $photo)): ?>
-      <img src="<?= e($photo) ?>" alt="<?= e($name) ?>">
-    <?php else: ?>
-      <b><?= e(mb_substr($name, 0, 1)) ?></b>
-    <?php endif; ?>
-  </div>
-</div></header>
-
-<section id="apropos"><div class="wrap rv">
-  <h2><?= t('À propos', 'About') ?></h2>
-  <div class="card"><p style="margin:0;font-size:1.05rem;color:var(--ink)"><?= $about ?></p></div>
-</div></section>
-
-<section id="skills" class="dark"><div class="wrap rv">
-  <h2><?= t('Compétences', 'Skills') ?></h2>
-  <?php foreach ($skills as $label => $pct): ?>
-    <div class="bar">
-      <div class="top"><span><?= e($label) ?></span><span><?= (int)$pct ?>%</span></div>
-      <div class="track"><div class="fill" style="--w:<?= (int)$pct ?>%"></div></div>
-    </div>
-  <?php endforeach; ?>
-</div></section>
-
-<section id="langues"><div class="wrap rv">
-  <h2><?= t('Langues', 'Languages') ?></h2>
-  <div class="grid">
-    <?php foreach ($languages as $l): ?>
-      <div class="card lang-card">
-        <div class="native" lang="<?= e($l['lang']) ?>"><?= e($l['native']) ?></div>
-        <h3><?= $l['name'] ?></h3>
-        <p style="margin:6px 0 0"><?= $l['status'] ?></p>
-        <div class="dots">
-          <?php for ($i = 1; $i <= 5; $i++): ?><span class="<?= $i <= $l['level'] ? 'on' : '' ?>"></span><?php endfor; ?>
-        </div>
+  <a class="back" href="/?page=modules">&larr; <?= t('Retour aux modules', 'Back to modules') ?></a><br>
+  <h2><?= t('Approche agile', 'Agile approach') ?></h2>
+  <p style="color:var(--muted);margin-bottom:30px">M202 &middot; 120 h</p>
+  <div class="grid2">
+    <div class="card">
+      <div class="badge"><?= t('Cours', 'Lessons') ?></div>
+      <div class="rows">
+        <?php foreach ($agile['cours'] as $c): ?><a href="<?= e($c['link']) ?>"><span><?= $c['title'] ?></span></a><?php endforeach; ?>
       </div>
-    <?php endforeach; ?>
+    </div>
+    <div class="card">
+      <div class="badge"><?= t('TP', 'Labs (TP)') ?></div>
+      <div class="rows">
+        <?php foreach ($agile['tp'] as $c): ?><a href="<?= e($c['link']) ?>"><span><?= $c['title'] ?></span></a><?php endforeach; ?>
+      </div>
+    </div>
   </div>
 </div></section>
 
-<section id="parcours"><div class="wrap rv">
-  <h2><?= t('Parcours', 'Education') ?></h2>
-  <div class="tl">
-    <?php foreach ($parcours as $x): ?>
-      <div class="item"><small><?= e($x[0]) ?></small><h3><?= $x[1] ?></h3><p style="color:var(--muted)"><?= $x[2] ?></p></div>
-    <?php endforeach; ?>
-  </div>
-</div></section>
-
-<section id="modules"><div class="wrap rv">
-  <div class="card teaser">
-    <h3><?= t('Mes modules', 'My modules') ?></h3>
-    <p><?= t("Découvre les modules que j'étudie en Développement Digital, option Full Stack.", "Discover the modules I study in Digital Development, Full Stack option.") ?></p>
-    <a class="btn primary" href="/?page=modules"><?= t('Voir les modules', 'View modules') ?></a>
-  </div>
-</div></section>
-
-<section id="contact" class="dark"><div class="wrap rv">
-  <h2><?= t('Contact') ?></h2>
-  <form class="cf" id="cf">
-    <input type="text" id="cn" <?= ph('Votre nom', 'Your name') ?> required>
-    <input type="email" id="ce" <?= ph('Votre email', 'Your email') ?> required>
-    <textarea id="cm" <?= ph('Votre message', 'Your message') ?> required></textarea>
-    <button type="submit"><?= t('Envoyer le message', 'Send message') ?></button>
-  </form>
-</div></section>
-
-<?php endif; ?>
 
 <footer class="dark">
   <a href="<?= e($github) ?>" target="_blank" rel="noopener">GitHub</a>

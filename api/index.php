@@ -1,5 +1,7 @@
 <?php
-header('Cache-Control: no-cache, must-revalidate'); // bach dima yban l'version jdida
+header('Cache-Control: no-cache, must-revalidate');
+// ?page=modules => page dyal les modules, sinon l'page principale
+$page = (($_GET['page'] ?? '') === 'modules') ? 'modules' : 'home'; // bach dima yban l'version jdida
 // ====== MODIFIE GHIR HNA ======
 $name     = "Chaimae Salah";
 // t("francais", "english") : kaykteb nefss l'texte b joj loghat. L'site kaybdl bin FR w EN.
@@ -36,10 +38,16 @@ $skills = [
   "UI / UX Design" => 70,
 ];
 
-$projects = [
-  ["title" => t("Projet 1", "Project 1"), "desc" => t("Application de gestion avec authentification et CRUD complet.", "Management app with authentication and full CRUD."), "tech" => ["PHP", "MySQL", "Bootstrap"], "github" => "#", "demo" => "#"],
-  ["title" => t("Projet 2", "Project 2"), "desc" => t("Site e-commerce responsive avec panier et espace admin.", "Responsive e-commerce site with cart and admin area."), "tech" => ["Laravel", "JavaScript"], "github" => "#", "demo" => "#"],
-  ["title" => t("Projet 3", "Project 3"), "desc" => t("Application web en temps réel avec API REST.", "Real-time web application with a REST API."), "tech" => ["React", "Node.js"], "github" => "#", "demo" => "#"],
+// Les modules li kat9ra (bdl smiyat w descriptions b rassek)
+$modules = [
+  ["tag" => "Frontend", "name" => t("HTML & CSS", "HTML & CSS"), "desc" => t("Intégration de pages web responsives.", "Building responsive web pages.")],
+  ["tag" => "Frontend", "name" => t("JavaScript", "JavaScript"), "desc" => t("Interactivité, DOM et logique côté client.", "Interactivity, the DOM and client-side logic.")],
+  ["tag" => "Frontend", "name" => t("React", "React"), "desc" => t("Composants et interfaces modernes.", "Components and modern interfaces.")],
+  ["tag" => "Backend", "name" => t("PHP & MySQL", "PHP & MySQL"), "desc" => t("Applications dynamiques avec base de données.", "Dynamic applications with a database.")],
+  ["tag" => "Backend", "name" => t("Laravel", "Laravel"), "desc" => t("Framework PHP : MVC, routes, authentification.", "PHP framework: MVC, routes, authentication.")],
+  ["tag" => "Conception", "name" => t("Algorithmique", "Algorithms"), "desc" => t("Logique, structures de données, résolution de problèmes.", "Logic, data structures, problem solving.")],
+  ["tag" => "Outils", "name" => t("Git & GitHub", "Git & GitHub"), "desc" => t("Versionner et partager son code.", "Version and share your code.")],
+  ["tag" => "Langues", "name" => t("Anglais technique", "Technical English"), "desc" => t("Vocabulaire et documentation informatique.", "IT vocabulary and documentation.")],
 ];
 
 // Les langues: level = men 1 l 5 (bdlo b rassek ila t7assnti)
@@ -112,6 +120,13 @@ html[lang="fr"] .l-fr,html[lang="en"] .l-en{color:var(--pink)}
 .dots span.on{background:var(--pink);box-shadow:0 0 8px rgba(229,69,127,.5)}
 .show .dots span{transform:scale(1)}
 .dots span:nth-child(2){transition-delay:.1s}.dots span:nth-child(3){transition-delay:.2s}.dots span:nth-child(4){transition-delay:.3s}.dots span:nth-child(5){transition-delay:.4s}
+.teaser{max-width:640px;margin:0 auto;text-align:center;padding:46px 30px}
+.teaser h3{font-size:1.8rem;margin-bottom:12px}
+.teaser .btn{margin-top:8px}
+.badge{width:44px;height:44px;border-radius:50%;background:var(--pink-l);color:var(--pink-d);display:grid;place-items:center;font-weight:800;margin-bottom:14px;transition:background .3s,color .3s,transform .3s}
+.card:hover .badge{background:var(--pink);color:#fff;transform:rotate(-8deg) scale(1.08)}
+.back{display:inline-block;margin-bottom:26px;font-weight:700;color:var(--pink);transition:transform .25s}
+.back:hover{transform:translateX(-6px)}
 .ic-sun{display:none}
 [data-theme="dark"] .ic-moon{display:none}
 [data-theme="dark"] .ic-sun{display:inline}
@@ -219,20 +234,41 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
 <body>
 
 <nav><div class="wrap">
-  <a href="#top" class="logo"><?= e($name) ?></a>
+  <a href="/" class="logo"><?= e($name) ?></a>
   <div class="navr">
   <ul>
-    <li><a href="#apropos"><?= t('À propos', 'About') ?></a></li>
-    <li><a href="#skills"><?= t('Compétences', 'Skills') ?></a></li>
-    <li><a href="#langues"><?= t('Langues', 'Languages') ?></a></li>
-    <li><a href="#parcours"><?= t('Parcours', 'Education') ?></a></li>
-    <li><a href="#projets"><?= t('Projets', 'Projects') ?></a></li>
-    <li><a href="#contact"><?= t('Contact') ?></a></li>
+    <li><a href="/#apropos"><?= t('À propos', 'About') ?></a></li>
+    <li><a href="/#skills"><?= t('Compétences', 'Skills') ?></a></li>
+    <li><a href="/#langues"><?= t('Langues', 'Languages') ?></a></li>
+    <li><a href="/#parcours"><?= t('Parcours', 'Education') ?></a></li>
+    <li><a href="/#modules"><?= t('Modules') ?></a></li>
+    <li><a href="/#contact"><?= t('Contact') ?></a></li>
   </ul>
   <button class="lg" type="button" onclick="toggleLang()" aria-label="Français / English" title="Français / English"><span class="l-fr">FR</span> | <span class="l-en">EN</span></button>
   <button class="tg" type="button" onclick="toggleTheme()" aria-label="Changer les couleurs du site (noir / pink)" title="Noir / Pink"><span class="ic-moon">&#127769;</span><span class="ic-sun">&#9728;&#65039;</span></button>
   </div>
 </div></nav>
+
+<?php if ($page === 'modules'): ?>
+<!-- ===== PAGE MODULES ===== -->
+<section style="padding-top:50px"><div class="wrap rv">
+  <a class="back" href="/#modules">&larr; <?= t('Retour', 'Back') ?></a><br>
+  <h2><?= t('Mes modules', 'My modules') ?></h2>
+  <p style="color:var(--muted);margin-bottom:30px"><?= t("Les modules que j'étudie en Développement Digital, option Full Stack.", "The modules I study in Digital Development, Full Stack option.") ?></p>
+  <div class="grid">
+    <?php foreach ($modules as $i => $m): ?>
+      <article class="card">
+        <div class="badge"><?= sprintf('%02d', $i + 1) ?></div>
+        <h3><?= $m['name'] ?></h3>
+        <p><?= $m['desc'] ?></p>
+        <span class="tag"><?= e($m['tag']) ?></span>
+      </article>
+    <?php endforeach; ?>
+  </div>
+</div></section>
+
+<?php else: ?>
+<!-- ===== PAGE PRINCIPALE ===== -->
 
 <header class="hero" id="top"><div class="wrap">
   <div>
@@ -240,7 +276,7 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
     <h1><?= e($name) ?><br><span><?= $role ?></span></h1>
     <p class="sub"><?= t("Étudiante à $school. Je crée des sites et applications web complets, du design à la base de données.", "Student at $school. I build complete websites and web apps, from design to database.") ?></p>
     <div class="btns">
-      <a class="btn primary" href="#projets"><?= t('Voir mes projets', 'View my projects') ?></a>
+      <a class="btn primary" href="#modules"><?= t('Voir mes modules', 'View my modules') ?></a>
       <a class="btn ghost" href="<?= e($cv) ?>" download><?= t('Télécharger mon CV', 'Download my CV') ?></a>
     </div>
   </div>
@@ -293,21 +329,11 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   </div>
 </div></section>
 
-<section id="projets"><div class="wrap rv">
-  <h2><?= t('Projets', 'Projects') ?></h2>
-  <div class="grid">
-    <?php foreach ($projects as $p): ?>
-      <article class="card proj">
-        <div class="thumb"><?= e(mb_substr(strip_tags($p['title']), 0, 1)) ?></div>
-        <h3><?= $p['title'] ?></h3>
-        <p><?= $p['desc'] ?></p>
-        <?php foreach ($p['tech'] as $t): ?><span class="tag"><?= e($t) ?></span><?php endforeach; ?>
-        <div class="links">
-          <a href="<?= e($p['github']) ?>" target="_blank" rel="noopener">GitHub</a>
-          <a href="<?= e($p['demo']) ?>" target="_blank" rel="noopener"><?= t('Démo', 'Demo') ?></a>
-        </div>
-      </article>
-    <?php endforeach; ?>
+<section id="modules"><div class="wrap rv">
+  <div class="card teaser">
+    <h3><?= t('Mes modules', 'My modules') ?></h3>
+    <p><?= t("Découvre les modules que j'étudie en Développement Digital, option Full Stack.", "Discover the modules I study in Digital Development, Full Stack option.") ?></p>
+    <a class="btn primary" href="/?page=modules"><?= t('Voir les modules', 'View modules') ?></a>
   </div>
 </div></section>
 
@@ -321,6 +347,8 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   </form>
 </div></section>
 
+<?php endif; ?>
+
 <footer class="dark">
   <a href="<?= e($github) ?>" target="_blank" rel="noopener">GitHub</a>
   <a href="<?= e($linkedin) ?>" target="_blank" rel="noopener">LinkedIn</a>
@@ -329,7 +357,8 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
 
 <script>
 // Kayft'7 l'email app b message m3emmer (bla backend)
-document.getElementById('cf').addEventListener('submit',function(ev){
+var cfEl=document.getElementById('cf');
+if(cfEl)cfEl.addEventListener('submit',function(ev){
   ev.preventDefault();
   const n=document.getElementById('cn').value,m=document.getElementById('ce').value,t=document.getElementById('cm').value;
   location.href='mailto:<?= e($email) ?>?subject='+encodeURIComponent((document.documentElement.lang==='en'?'Message from ':'Message de ')+n)+'&body='+encodeURIComponent(t+'\n\n'+n+' ('+m+')');

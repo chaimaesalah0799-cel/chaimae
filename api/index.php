@@ -1,8 +1,10 @@
 <?php
 header('Cache-Control: no-cache, must-revalidate');
-// ?page=modules => page dyal les modules, sinon l'page principale
-$page = in_array($_GET['page'] ?? '', ['modules', 'agile'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
-$view = in_array($_GET['view'] ?? '', ['cours', 'tp'], true) ? $_GET['view'] : '';   // ?page=agile&view=tp => galerie dyal TP
+// ?page=modules => page dyal les modules, ?page=projets => page dyal les projets, sinon l'page principale
+$page = in_array($_GET['page'] ?? '', ['modules', 'agile', 'projets'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
+$view = in_array($_GET['view'] ?? '', ['cours', 'tp'], true) ? $_GET['view'] : '';   // ?page=agile&view=tp => les 6 ateliers
+$atelier = (int)($_GET['atelier'] ?? 0);   // ?page=agile&view=tp&atelier=3 => galerie dyal Atelier 3
+if ($atelier < 1 || $atelier > 6) $atelier = 0;
 // ====== MODIFIE GHIR HNA ======
 $name     = "Chaimae Salah";
 // t("francais", "english") : kaykteb nefss l'texte b joj loghat. L'site kaybdl bin FR w EN.
@@ -50,9 +52,15 @@ $modules = [
   ["code" => "M207", "hours" => 60,  "name" => t("Projet de synthèse", "Capstone project")],
 ];
 
+// Les projets (bdl smiyat w descriptions w liens b rassek)
+$projects = [
+  ["name" => t("Projet 1", "Project 1"), "desc" => t("Description du projet.", "Project description."), "tags" => ["HTML", "CSS", "PHP"], "link" => "#"],
+  ["name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"],            "link" => "#"],
+];
+
 // Page "Approche agile": tswar dyal l'cours w l'TP
-// 7ett tswar f: public/imges/agile/cours/  w  public/imges/agile/tp/
-// L'site kay9ra l'tswar b rasso. Ila ma khdamch, ktbi smiyatthom hna, mital: ["tp1.png", "tp2.png"]
+// 7ett tswar f: public/imges/agile/cours/  w  public/imges/agile/tp/atelier1/ ... atelier6/
+// L'site kay9ra l'tswar b rasso. Ila ma khdamch, ktbi smiyatthom hna, mital: "tp/atelier1" => ["a.png", "b.png"]
 $agile = [
   "cours" => [],
   "tp"    => [],
@@ -69,11 +77,17 @@ $parcours = [
   ["2024 – 2026", t("Développement Digital, option Full Stack", "Digital Development, Full Stack option"), t($school)],
   ["2025", t("Stage", "Internship"), t("Ajoute ton stage ici", "Add your internship here")],
 ];
+// kat9ra les tswar mn dossier ($k = "cours" wla "tp/atelier3" ...)
 function agile_imgs($k){
   global $agile;
   $found = glob(__DIR__ . '/../public/imges/agile/' . $k . '/*.{jpg,jpeg,png,webp,JPG,JPEG,PNG,WEBP}', GLOB_BRACE) ?: [];
   if ($found) { sort($found); return array_map('basename', $found); }
-  return $agile[$k];
+  return $agile[$k] ?? [];
+}
+// tswira dyal l'card (ila ma kaynach l'fichier, kat3ref icône)
+function cover($file, $svg){
+  $p = __DIR__ . '/../public/imges/' . $file;
+  return '<div class="cover">' . (file_exists($p) ? '<img src="/imges/' . e($file) . '" alt="" loading="lazy">' : $svg) . '</div>';
 }
 function e($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 ?>
@@ -137,6 +151,13 @@ html[lang="fr"] .l-fr,html[lang="en"] .l-en{color:var(--pink)}
 .teaser{max-width:640px;margin:0 auto;text-align:center;padding:46px 30px}
 .teaser h3{font-size:1.8rem;margin-bottom:12px}
 .teaser .btn{margin-top:8px}
+/* 2 cartes cote a cote : Modules + Projets */
+.teasers{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:26px}
+.teasers .teaser{max-width:none;margin:0}
+.cover{height:170px;border-radius:14px;margin-bottom:20px;overflow:hidden;display:grid;place-items:center;color:var(--pink);background:linear-gradient(135deg,var(--pink-l),var(--thumb2))}
+.cover img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.cover svg{width:64px;height:64px}
+.teaser:hover .cover img{transform:scale(1.06)}
 .badge{width:44px;height:44px;border-radius:50%;background:var(--pink-l);color:var(--pink-d);display:grid;place-items:center;font-weight:800;margin-bottom:14px;transition:background .3s,color .3s,transform .3s}
 .card:hover .badge{background:var(--pink);color:#fff;transform:rotate(-8deg) scale(1.08)}
 .back{display:inline-block;margin-bottom:26px;font-weight:700;color:var(--pink);transition:transform .25s}
@@ -277,6 +298,7 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
     <li><a href="/#langues"><?= t('Langues', 'Languages') ?></a></li>
     <li><a href="/#parcours"><?= t('Parcours', 'Education') ?></a></li>
     <li><a href="/#modules"><?= t('Modules') ?></a></li>
+    <li><a href="/#projets"><?= t('Projets', 'Projects') ?></a></li>
     <li><a href="/#contact"><?= t('Contact') ?></a></li>
   </ul>
   <button class="lg" type="button" onclick="toggleLang()" aria-label="Français / English" title="Français / English"><span class="l-fr">FR</span> | <span class="l-en">EN</span></button>
@@ -304,23 +326,65 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   </div>
 </div></section>
 
-<?php elseif ($page === 'agile' && $view): ?>
-<!-- ===== GALERIE : COURS ou TP (tswar) ===== -->
-<?php $imgs = agile_imgs($view); $isTp = ($view === 'tp'); ?>
+<?php elseif ($page === 'projets'): ?>
+<!-- ===== PAGE PROJETS ===== -->
+<section style="padding-top:50px"><div class="wrap rv">
+  <a class="back" href="/#modules">&larr; <?= t('Retour', 'Back') ?></a><br>
+  <h2><?= t('Mes projets', 'My projects') ?></h2>
+  <div class="grid">
+    <?php foreach ($projects as $i => $p): ?>
+      <article class="card proj">
+        <div class="thumb"><?= $i + 1 ?></div>
+        <h3><?= $p['name'] ?></h3>
+        <p><?= $p['desc'] ?></p>
+        <?php foreach ($p['tags'] as $tg): ?><span class="tag"><?= e($tg) ?></span><?php endforeach; ?>
+        <div class="links"><a href="<?= e($p['link']) ?>" target="_blank" rel="noopener"><?= t('Voir le projet', 'View project') ?></a></div>
+      </article>
+    <?php endforeach; ?>
+  </div>
+</div></section>
+
+<?php elseif ($page === 'agile' && $view === 'tp' && !$atelier): ?>
+<!-- ===== TP : LES 6 ATELIERS ===== -->
 <section style="padding-top:50px"><div class="wrap rv">
   <a class="back" href="/?page=agile">&larr; <?= t('Retour', 'Back') ?></a><br>
-  <h2><?= $isTp ? t('TP', 'Labs (TP)') : t('Cours', 'Lessons') ?> &middot; <?= t('Approche agile', 'Agile approach') ?></h2>
+  <h2><?= t('TP', 'Labs (TP)') ?> &middot; <?= t('Approche agile', 'Agile approach') ?></h2>
+  <div class="grid">
+    <?php for ($n = 1; $n <= 6; $n++): $cnt = count(agile_imgs("tp/atelier$n")); ?>
+      <div class="card big">
+        <div class="ico"><b style="font-family:'Fraunces',serif;font-size:2.4rem"><?= $n ?></b></div>
+        <h3><?= t("Atelier $n", "Workshop $n") ?></h3>
+        <?php if ($cnt): ?><span class="tag"><?= $cnt ?> images</span><br><?php endif; ?>
+        <a class="btn primary" href="/?page=agile&amp;view=tp&amp;atelier=<?= $n ?>"><?= t("Voir l'atelier", 'View workshop') ?></a>
+      </div>
+    <?php endfor; ?>
+  </div>
+</div></section>
+
+<?php elseif ($page === 'agile' && $view): ?>
+<!-- ===== GALERIE : COURS ou ATELIER (tswar) ===== -->
+<?php
+  $isTp  = ($view === 'tp');
+  $isAt  = ($isTp && $atelier);
+  $key   = $isAt ? "tp/atelier$atelier" : $view;
+  $imgs  = agile_imgs($key);
+  $back  = $isAt ? '/?page=agile&amp;view=tp' : '/?page=agile';
+  $title = $isAt ? t("Atelier $atelier", "Workshop $atelier") : ($isTp ? t('TP', 'Labs (TP)') : t('Cours', 'Lessons'));
+?>
+<section style="padding-top:50px"><div class="wrap rv">
+  <a class="back" href="<?= $back ?>">&larr; <?= t('Retour', 'Back') ?></a><br>
+  <h2><?= $title ?> &middot; <?= t('Approche agile', 'Agile approach') ?></h2>
   <?php if ($imgs): ?>
     <div class="gal">
       <?php foreach ($imgs as $i => $f): ?>
         <figure>
-          <img src="/imges/agile/<?= e($view) ?>/<?= e(rawurlencode($f)) ?>" alt="<?= $isTp ? 'TP' : 'Cours' ?> <?= $i + 1 ?>" loading="lazy">
-          <figcaption><?= $isTp ? 'TP' : 'Cours' ?> <?= $i + 1 ?></figcaption>
+          <img src="/imges/agile/<?= e($key) ?>/<?= e(rawurlencode($f)) ?>" alt="<?= $i + 1 ?>" loading="lazy">
+          <figcaption><?= $isAt ? "Atelier $atelier" : ($isTp ? 'TP' : 'Cours') ?> &middot; <?= $i + 1 ?></figcaption>
         </figure>
       <?php endforeach; ?>
     </div>
   <?php else: ?>
-    <div class="card"><p style="margin:0"><?= t("Pas encore d'images. Ajoute-les dans public/imges/agile/$view/", "No images yet. Add them in public/imges/agile/$view/") ?></p></div>
+    <div class="card"><p style="margin:0"><?= t("Pas encore d'images. Ajoute-les dans public/imges/agile/$key/", "No images yet. Add them in public/imges/agile/$key/") ?></p></div>
   <?php endif; ?>
 </div></section>
 <div id="lb"><img alt=""></div>
@@ -335,9 +399,9 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
     <?php
     $cards = [
       ['cours', t('Cours', 'Lessons'), t('Les supports de cours du module.', 'The course materials of the module.'), t('Voir le cours', 'View lessons')],
-      ['tp',    t('TP', 'Labs (TP)'),  t('Les travaux pratiques, en images.', 'The practical work, as images.'),    t('Voir le TP', 'View labs')],
+      ['tp',    t('TP', 'Labs (TP)'),  t('Les 6 ateliers du module, en images.', 'The 6 workshops of the module, as images.'), t('Voir les ateliers', 'View workshops')],
     ];
-    foreach ($cards as $c): $n = count(agile_imgs($c[0])); ?>
+    foreach ($cards as $c): $n = ($c[0] === 'cours') ? count(agile_imgs('cours')) : 0; ?>
       <div class="card big">
         <div class="ico">
           <?php if ($c[0] === 'cours'): ?>
@@ -417,11 +481,21 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   </div>
 </div></section>
 
+<!-- 2 cartes : Modules + Projets (kol wa7da fiha tswira) -->
 <section id="modules"><div class="wrap rv">
-  <div class="card teaser">
-    <h3><?= t('Mes modules', 'My modules') ?></h3>
-    <p><?= t("Découvre les modules que j'étudie en Développement Digital, option Full Stack.", "Discover the modules I study in Digital Development, Full Stack option.") ?></p>
-    <a class="btn primary" href="/?page=modules"><?= t('Voir les modules', 'View modules') ?></a>
+  <div class="teasers">
+    <div class="card teaser">
+      <?= cover('modules.jpg', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v16H6.5A2.5 2.5 0 0 0 4 21.5z"/><path d="M4 19V5.5"/><path d="M9 7h7M9 11h5"/></svg>') ?>
+      <h3><?= t('Mes modules', 'My modules') ?></h3>
+      <p><?= t("Découvre les modules que j'étudie en Développement Digital, option Full Stack.", "Discover the modules I study in Digital Development, Full Stack option.") ?></p>
+      <a class="btn primary" href="/?page=modules"><?= t('Voir les modules', 'View modules') ?></a>
+    </div>
+    <div class="card teaser" id="projets">
+      <?= cover('projets.jpg', '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M2 20h20"/><path d="M10 8.5 8 10.5l2 2M14 8.5l2 2-2 2"/></svg>') ?>
+      <h3><?= t('Mes projets', 'My projects') ?></h3>
+      <p><?= t("Découvre les projets que j'ai réalisés pendant ma formation.", "Discover the projects I built during my training.") ?></p>
+      <a class="btn primary" href="/?page=projets"><?= t('Voir les projets', 'View projects') ?></a>
+    </div>
   </div>
 </div></section>
 

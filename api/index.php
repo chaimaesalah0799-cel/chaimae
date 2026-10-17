@@ -53,9 +53,22 @@ $modules = [
 ];
 
 // Les projets (bdl smiyat w descriptions w liens b rassek)
+// "img"   => tswira (f public/imges/)
+// "links" => les liens (smiya => url). Bdlhom b les vrais liens dyalk
+// "ppt"   => PowerPoint (7ettou f public/docs/)
 $projects = [
-  ["name" => t("Projet 1", "Project 1"), "desc" => t("Description du projet.", "Project description."), "tags" => ["HTML", "CSS", "PHP"], "link" => "#"],
-  ["name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"],            "link" => "#"],
+  [
+    "name"  => "Vendo",
+    "desc"  => t("Application de vente en ligne. Décris ici ton projet en une ou deux phrases.", "Online selling app. Describe your project here in one or two sentences."),
+    "tags"  => ["HTML", "CSS", "PHP"],
+    "img"   => "projets/vendo.jpeg",
+    "links" => [
+      "GitHub" => "https://github.com/ton-username/vendo",
+      "Demo"   => "https://vendo.vercel.app",
+    ],
+    "ppt"   => "/docs/vendo.pptx",
+  ],
+  ["name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"], "links" => []],
 ];
 
 // Page "Approche agile": tswar dyal l'cours w l'TP
@@ -242,6 +255,8 @@ nav ul a:hover{color:var(--pink)} nav ul a:hover::after{width:100%}
 .links a:hover{letter-spacing:.06em;color:var(--pink-d)}
 .proj .thumb{height:140px;border-radius:12px;margin-bottom:18px;background:linear-gradient(135deg,var(--pink-l),var(--thumb2));display:grid;place-items:center;font-family:'Fraunces',serif;font-size:2.4rem;color:var(--pink);transition:transform .4s}
 .proj:hover .thumb{transform:scale(1.04)}
+.proj .thumb.has-img{height:200px;overflow:hidden;padding:0}
+.proj .thumb.has-img img{width:100%;height:100%;object-fit:cover}
 
 /* TIMELINE */
 .tl{border-left:3px solid var(--pink-l);padding-left:26px}
@@ -334,11 +349,24 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
   <div class="grid">
     <?php foreach ($projects as $i => $p): ?>
       <article class="card proj">
-        <div class="thumb"><?= $i + 1 ?></div>
+        <?php if (!empty($p['img'])): ?>
+          <div class="thumb has-img"><img src="/imges/<?= e($p['img']) ?>" alt="<?= e(strip_tags($p['name'])) ?>" loading="lazy" onerror="this.style.display='none'"></div>
+        <?php else: ?>
+          <div class="thumb"><?= $i + 1 ?></div>
+        <?php endif; ?>
         <h3><?= $p['name'] ?></h3>
         <p><?= $p['desc'] ?></p>
         <?php foreach ($p['tags'] as $tg): ?><span class="tag"><?= e($tg) ?></span><?php endforeach; ?>
-        <div class="links"><a href="<?= e($p['link']) ?>" target="_blank" rel="noopener"><?= t('Voir le projet', 'View project') ?></a></div>
+        <?php if (!empty($p['links'])): ?>
+          <div class="links">
+            <?php foreach ($p['links'] as $label => $url): ?>
+              <a href="<?= e($url) ?>" target="_blank" rel="noopener"><?= e($label) ?></a>
+            <?php endforeach; ?>
+          </div>
+        <?php endif; ?>
+        <?php if (!empty($p['ppt'])): ?>
+          <a class="btn primary" style="margin-top:18px;padding:10px 24px" href="<?= e($p['ppt']) ?>" download><?= t('Télécharger le PowerPoint', 'Download PowerPoint') ?></a>
+        <?php endif; ?>
       </article>
     <?php endforeach; ?>
   </div>

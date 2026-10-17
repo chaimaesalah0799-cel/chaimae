@@ -1,10 +1,11 @@
 <?php
 header('Cache-Control: no-cache, must-revalidate');
 // ?page=modules => page dyal les modules, ?page=projets => page dyal les projets, sinon l'page principale
-$page = in_array($_GET['page'] ?? '', ['modules', 'agile', 'projets'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
+$page = in_array($_GET['page'] ?? '', ['modules', 'agile', 'projets', 'projet'], true) ? $_GET['page'] : 'home'; // bach dima yban l'version jdida
 $view = in_array($_GET['view'] ?? '', ['cours', 'tp'], true) ? $_GET['view'] : '';   // ?page=agile&view=tp => les 6 ateliers
 $atelier = (int)($_GET['atelier'] ?? 0);   // ?page=agile&view=tp&atelier=3 => galerie dyal Atelier 3
 if ($atelier < 1 || $atelier > 6) $atelier = 0;
+$pslug = preg_replace('/[^a-z0-9_-]/i', '', $_GET['p'] ?? '');   // ?page=projet&p=vendo => page dyal projet
 // ====== MODIFIE GHIR HNA ======
 $name     = "Chaimae Salah";
 // t("francais", "english") : kaykteb nefss l'texte b joj loghat. L'site kaybdl bin FR w EN.
@@ -53,22 +54,24 @@ $modules = [
 ];
 
 // Les projets (bdl smiyat w descriptions w liens b rassek)
-// "img"   => tswira (f public/imges/)
-// "links" => les liens (smiya => url). Bdlhom b les vrais liens dyalk
-// "ppt"   => PowerPoint (7ettou f public/docs/)
+// "slug"      => smiya f l'lien (?page=projet&p=vendo)
+// "img"       => tswira (f public/imges/)
+// "resources" => 3 cartes f page dyal projet: ppt (PowerPoint), figma (lien), pdf
+//                Ila ma bghitich chi wa7da, mse7ha wla khlliha "" (ghadi t-khba)
 $projects = [
   [
+    "slug"  => "vendo",
     "name"  => "Vendo",
     "desc"  => t("Application de vente en ligne. Décris ici ton projet en une ou deux phrases.", "Online selling app. Describe your project here in one or two sentences."),
     "tags"  => ["HTML", "CSS", "PHP"],
     "img"   => "projets/vendo.jpeg",
-    "links" => [
-      "GitHub" => "https://github.com/ton-username/vendo",
-      "Demo"   => "https://vendo.vercel.app",
+    "resources" => [
+      "ppt"   => "/docs/vendo.pptx",                         // 7ett l'fichier f public/docs/
+      "figma" => "https://www.figma.com/design/ton-lien",    // lien dyal Figma
+      "pdf"   => "/docs/vendo.pdf",                          // 7ett l'fichier f public/docs/
     ],
-    "ppt"   => "/docs/vendo.pptx",
   ],
-  ["name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"], "links" => []],
+  ["slug" => "projet2", "name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"], "resources" => []],
 ];
 
 // Page "Approche agile": tswar dyal l'cours w l'TP
@@ -357,19 +360,49 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
         <h3><?= $p['name'] ?></h3>
         <p><?= $p['desc'] ?></p>
         <?php foreach ($p['tags'] as $tg): ?><span class="tag"><?= e($tg) ?></span><?php endforeach; ?>
-        <?php if (!empty($p['links'])): ?>
-          <div class="links">
-            <?php foreach ($p['links'] as $label => $url): ?>
-              <a href="<?= e($url) ?>" target="_blank" rel="noopener"><?= e($label) ?></a>
-            <?php endforeach; ?>
-          </div>
-        <?php endif; ?>
-        <?php if (!empty($p['ppt'])): ?>
-          <a class="btn primary" style="margin-top:18px;padding:10px 24px" href="<?= e($p['ppt']) ?>" download><?= t('Télécharger le PowerPoint', 'Download PowerPoint') ?></a>
-        <?php endif; ?>
+        <a class="btn primary" style="margin-top:18px;padding:10px 24px" href="/?page=projet&amp;p=<?= e($p['slug']) ?>"><?= t('Voir le projet', 'View project') ?></a>
       </article>
     <?php endforeach; ?>
   </div>
+</div></section>
+
+<?php elseif ($page === 'projet'): ?>
+<!-- ===== PAGE D'UN PROJET : PowerPoint / Figma / PDF ===== -->
+<?php
+  $cur = null;
+  foreach ($projects as $pp) { if (($pp['slug'] ?? '') === $pslug) { $cur = $pp; break; } }
+  $items = [
+    ['ppt',   'PowerPoint', t('La présentation du projet.', 'The project presentation.'),        t('Télécharger le PowerPoint', 'Download PowerPoint')],
+    ['figma', 'Figma',      t('La maquette et le design.', 'The mockup and design.'),            t('Ouvrir sur Figma', 'Open in Figma')],
+    ['pdf',   'PDF',        t('Le rapport / la documentation.', 'The report / documentation.'), t('Voir le PDF', 'View PDF')],
+  ];
+?>
+<section style="padding-top:50px"><div class="wrap rv">
+  <a class="back" href="/?page=projets">&larr; <?= t('Retour aux projets', 'Back to projects') ?></a><br>
+  <?php if ($cur): ?>
+    <h2><?= $cur['name'] ?></h2>
+    <p style="color:var(--muted);margin-bottom:30px"><?= $cur['desc'] ?></p>
+    <div class="grid">
+      <?php foreach ($items as $it): $url = $cur['resources'][$it[0]] ?? ''; if (!$url) continue; ?>
+        <div class="card big">
+          <div class="ico">
+            <?php if ($it[0] === 'ppt'): ?>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/><path d="M8 12l2.5-3 2 2 3-4"/></svg>
+            <?php elseif ($it[0] === 'figma'): ?>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="8" height="6" rx="3"/><rect x="12" y="3" width="8" height="6" rx="3"/><rect x="4" y="9" width="8" height="6" rx="3"/><circle cx="16" cy="12" r="3"/><path d="M4 18a3 3 0 0 1 3-3h5v3a3 3 0 0 1-6 0z"/></svg>
+            <?php else: ?>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/><path d="M9 14h6M9 17h4"/></svg>
+            <?php endif; ?>
+          </div>
+          <h3><?= $it[1] ?></h3>
+          <p><?= $it[2] ?></p>
+          <a class="btn primary" href="<?= e($url) ?>" target="_blank" rel="noopener"<?= $it[0] === 'ppt' ? ' download' : '' ?>><?= $it[3] ?></a>
+        </div>
+      <?php endforeach; ?>
+    </div>
+  <?php else: ?>
+    <div class="card"><p style="margin:0"><?= t('Projet introuvable.', 'Project not found.') ?></p></div>
+  <?php endif; ?>
 </div></section>
 
 <?php elseif ($page === 'agile' && $view === 'tp' && !$atelier): ?>

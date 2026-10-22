@@ -54,24 +54,41 @@ $modules = [
 ];
 
 // Les projets (bdl smiyat w descriptions w liens b rassek)
-// "slug"      => smiya f l'lien (?page=projet&p=vendo)
-// "img"       => tswira (f public/imges/)
-// "resources" => 3 cartes f page dyal projet: ppt (PowerPoint), figma (lien), pdf
-//                Ila ma bghitich chi wa7da, mse7ha wla khlliha "" (ghadi t-khba)
+// "slug"  => smiya f l'lien (?page=projet&p=vendo)
+// "img"   => tswira (f public/imges/)
+// "parts" => les cartes li kaybano f page dyal projet (01, 02, 03...)
+//            "links" => [ [smiya, lien], [smiya, lien] ]  (khlliha [] => kayban "Support à ajouter")
 $projects = [
   [
     "slug"  => "vendo",
     "name"  => "Vendo",
-    "desc"  => t("Application de vente en ligne. Décris ici ton projet en une ou deux phrases.", "Online selling app. Describe your project here in one or two sentences."),
+    "desc"  => t("Un projet qui rassemble trois composants : méthode en cascade, gestion agile et pratique Git.", "A project that brings together three components: waterfall method, agile management and Git practice."),
     "tags"  => ["HTML", "CSS", "PHP"],
     "img"   => "projets/vendo.jpeg",
-    "resources" => [
-      "ppt"   => "/docs/vendo.pptx",                         // 7ett l'fichier f public/docs/
-      "figma" => "https://www.figma.com/design/ton-lien",    // lien dyal Figma
-      "pdf"   => "/docs/vendo.pdf",                          // 7ett l'fichier f public/docs/
+    "parts" => [
+      [
+        "title" => t("Méthode en cascade", "Waterfall method"),
+        "desc"  => t("Supports et étapes de l'atelier classique.", "Materials and steps of the classic workshop."),
+        "links" => [
+          [t("Ouvrir le PowerPoint", "Open the PowerPoint"), "/docs/vendo-cascade.pptx"],   // 7ett l'fichier f public/docs/
+          [t("Ouvrir le PDF", "Open the PDF"),               "/docs/vendo-cascade.pdf"],
+        ],
+      ],
+      [
+        "title" => t("Gestion agile", "Agile management"),
+        "desc"  => t("Organisation du projet, user stories et planification du sprint.", "Project organisation, user stories and sprint planning."),
+        "links" => [
+          [t("Consulter le support", "View the material"), "/docs/vendo-agile.pdf"],
+        ],
+      ],
+      [
+        "title" => t("Pratique Git", "Git practice"),
+        "desc"  => t("Exercices et exemples liés à la gestion des versions.", "Exercises and examples about version control."),
+        "links" => [],   // vide => kayban "Support à ajouter"
+      ],
     ],
   ],
-  ["slug" => "projet2", "name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"], "resources" => []],
+  ["slug" => "projet2", "name" => t("Projet 2", "Project 2"), "desc" => t("Description du projet.", "Project description."), "tags" => ["JavaScript"], "parts" => []],
 ];
 
 // Page "Approche agile": tswar dyal l'cours w l'TP
@@ -260,6 +277,18 @@ nav ul a:hover{color:var(--pink)} nav ul a:hover::after{width:100%}
 .proj:hover .thumb{transform:scale(1.04)}
 .proj .thumb.has-img{height:200px;overflow:hidden;padding:0}
 .proj .thumb.has-img img{width:100%;height:100%;object-fit:cover}
+/* Page projet : carte principale + 3 sous-cartes */
+.pj-wrap{padding:32px}
+.pj-wrap:hover{transform:none;box-shadow:var(--shadow)}
+.pj-head{display:flex;align-items:center;gap:22px;flex-wrap:wrap}
+.pj-head img{width:84px;height:84px;border-radius:22px;object-fit:cover;box-shadow:var(--shadow)}
+.pj-sep{height:1px;background:var(--line);margin:28px 0}
+.pj-parts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:18px}
+.sub{border:1px solid var(--line);border-radius:16px;padding:22px;background:var(--bg);transition:transform .3s,box-shadow .3s,border-color .3s,background-color .4s}
+.sub:hover{transform:translateY(-6px);border-color:var(--pink);box-shadow:var(--shadow-h)}
+.sub h3{font-size:1.15rem}
+.sub .links{flex-wrap:wrap;gap:6px 18px}
+.sub .soon{color:var(--muted);font-weight:700;font-size:.92rem}
 
 /* TIMELINE */
 .tl{border-left:3px solid var(--pink-l);padding-left:26px}
@@ -367,38 +396,45 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
 </div></section>
 
 <?php elseif ($page === 'projet'): ?>
-<!-- ===== PAGE D'UN PROJET : PowerPoint / Figma / PDF ===== -->
+<!-- ===== PAGE D'UN PROJET : carte principale + cartes 01 / 02 / 03 ===== -->
 <?php
   $cur = null;
   foreach ($projects as $pp) { if (($pp['slug'] ?? '') === $pslug) { $cur = $pp; break; } }
-  $items = [
-    ['ppt',   'PowerPoint', t('La présentation du projet.', 'The project presentation.'),        t('Télécharger le PowerPoint', 'Download PowerPoint')],
-    ['figma', 'Figma',      t('La maquette et le design.', 'The mockup and design.'),            t('Ouvrir sur Figma', 'Open in Figma')],
-    ['pdf',   'PDF',        t('Le rapport / la documentation.', 'The report / documentation.'), t('Voir le PDF', 'View PDF')],
-  ];
 ?>
 <section style="padding-top:50px"><div class="wrap rv">
-  <a class="back" href="/?page=projets">&larr; <?= t('Retour aux projets', 'Back to projects') ?></a><br>
+  <a class="back" href="/?page=projets">&larr; <?= t('Retour aux projets', 'Back to projects') ?></a>
   <?php if ($cur): ?>
-    <h2><?= $cur['name'] ?></h2>
-    <p style="color:var(--muted);margin-bottom:30px"><?= $cur['desc'] ?></p>
-    <div class="grid">
-      <?php foreach ($items as $it): $url = $cur['resources'][$it[0]] ?? ''; if (!$url) continue; ?>
-        <div class="card big">
-          <div class="ico">
-            <?php if ($it[0] === 'ppt'): ?>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M12 16v4M8 20h8"/><path d="M8 12l2.5-3 2 2 3-4"/></svg>
-            <?php elseif ($it[0] === 'figma'): ?>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="8" height="6" rx="3"/><rect x="12" y="3" width="8" height="6" rx="3"/><rect x="4" y="9" width="8" height="6" rx="3"/><circle cx="16" cy="12" r="3"/><path d="M4 18a3 3 0 0 1 3-3h5v3a3 3 0 0 1-6 0z"/></svg>
-            <?php else: ?>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5"/><path d="M9 14h6M9 17h4"/></svg>
-            <?php endif; ?>
-          </div>
-          <h3><?= $it[1] ?></h3>
-          <p><?= $it[2] ?></p>
-          <a class="btn primary" href="<?= e($url) ?>" target="_blank" rel="noopener"<?= $it[0] === 'ppt' ? ' download' : '' ?>><?= $it[3] ?></a>
+    <div class="card pj-wrap">
+      <div class="pj-head">
+        <?php if (!empty($cur['img'])): ?>
+          <img src="/imges/<?= e($cur['img']) ?>" alt="<?= e(strip_tags($cur['name'])) ?>" onerror="this.style.display='none'">
+        <?php endif; ?>
+        <div>
+          <h2 style="margin-bottom:12px"><?= $cur['name'] ?></h2>
+          <p style="margin:0"><?= $cur['desc'] ?></p>
         </div>
-      <?php endforeach; ?>
+      </div>
+      <?php if (!empty($cur['parts'])): ?>
+        <div class="pj-sep"></div>
+        <div class="pj-parts">
+          <?php foreach ($cur['parts'] as $k => $part): ?>
+            <div class="sub">
+              <span class="badge"><?= sprintf('%02d', $k + 1) ?></span>
+              <h3><?= $part['title'] ?></h3>
+              <p><?= $part['desc'] ?></p>
+              <?php if (!empty($part['links'])): ?>
+                <div class="links">
+                  <?php foreach ($part['links'] as $lk): ?>
+                    <a href="<?= e($lk[1]) ?>" target="_blank" rel="noopener"><?= $lk[0] ?> &rarr;</a>
+                  <?php endforeach; ?>
+                </div>
+              <?php else: ?>
+                <span class="soon"><?= t('Support à ajouter', 'Material to be added') ?></span>
+              <?php endif; ?>
+            </div>
+          <?php endforeach; ?>
+        </div>
+      <?php endif; ?>
     </div>
   <?php else: ?>
     <div class="card"><p style="margin:0"><?= t('Projet introuvable.', 'Project not found.') ?></p></div>

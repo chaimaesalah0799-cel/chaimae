@@ -1,3 +1,4 @@
+
 <?php
 header('Cache-Control: no-cache, must-revalidate');
 // ?page=modules => page dyal les modules, ?page=projets => page dyal les projets, sinon l'page principale
@@ -132,6 +133,8 @@ function e($s){ return htmlspecialchars($s, ENT_QUOTES, 'UTF-8'); }
 <script>
 // 'js' => les animations GSAP sont actives (kat-t7yyed ila l'motion mdeyya9)
 if(!(window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches))document.documentElement.classList.add('js');
+// preloader: kayban ghir f awl zyara dyal session
+try{if(sessionStorage.getItem('pl'))document.documentElement.classList.add('nopl')}catch(e){}
 try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t)}catch(e){}
 try{var l=localStorage.getItem('lang');if(l==='en'||l==='fr')document.documentElement.lang=l}catch(e){}
 // setLang('fr') wla setLang('en') : kaybdl koll l'texte f l'page
@@ -341,6 +344,34 @@ footer.dark{border-top:1px solid var(--line);padding:38px 22px;display:flex;just
 footer.dark a{border:2px solid var(--pink);color:var(--pink);font-weight:700;padding:9px 26px;border-radius:50px;transition:background .25s,color .25s,box-shadow .25s}
 footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)}
 
+/* ===== PRELOADER (awl zyara) ===== */
+#pl{display:none;position:fixed;inset:0;z-index:200;background:var(--pink);color:#fff;flex-direction:column;justify-content:center;align-items:center;gap:26px}
+.js #pl{display:flex}
+.nopl #pl{display:none!important}
+.pl-name{font-family:'Fraunces',serif;font-weight:800;font-size:clamp(2.4rem,8vw,5.5rem);line-height:1.1;text-align:center}
+.pl-meta{display:flex;align-items:center;gap:18px;width:min(360px,70vw)}
+.pl-bar{flex:1;height:3px;background:rgba(255,255,255,.3);border-radius:3px;overflow:hidden}
+.pl-fill{display:block;height:100%;background:#fff;transform:scaleX(0);transform-origin:left}
+.pl-num{font:800 1.1rem 'Nunito',sans-serif;min-width:3ch;text-align:right}
+
+/* ===== BARRE DE PROGRESSION ===== */
+#pg{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f08bb1,var(--pink));transform:scaleX(0);transform-origin:left;z-index:150;pointer-events:none}
+
+/* ===== CURSEUR PERSONNALISE (souris ghir) ===== */
+#cur{position:fixed;left:0;top:0;width:0;height:0;z-index:300;pointer-events:none;opacity:0;transition:opacity .3s}
+#cur.on{opacity:1}
+#cur span{position:absolute;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--pink);display:grid;place-items:center;color:#fff;font:800 .72rem 'Nunito',sans-serif;transition:width .3s,height .3s,margin .3s,background-color .3s,opacity .2s}
+#cur.big span{width:56px;height:56px;margin:-28px 0 0 -28px;background:rgba(229,69,127,.22);box-shadow:inset 0 0 0 1.5px var(--pink)}
+#cur.view span{width:78px;height:78px;margin:-39px 0 0 -39px}
+#cur.hide span{opacity:0}
+html.has-cur *{cursor:none!important}
+html.has-cur input,html.has-cur textarea{cursor:text!important}
+
+/* ===== CARTES 3D (tilt) + dow li kay-tb3 l-souris ===== */
+.tilt{position:relative}
+.tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(229,69,127,.16),transparent 60%);transition:opacity .35s}
+.tilt:hover::after{opacity:1}
+
 /* ===== ETAT INITIAL DES ANIMATIONS (GSAP les fait apparaitre) ===== */
 .js .hero .inner,.js .hero .hg,.js .hero p.sub,.js .hero .btns,.js .hero .avatar{visibility:hidden}
 .js .rv :is(h2,.back,.card,.part,.bar,.tl .item,.gal figure,form.cf):not(.seen),
@@ -362,6 +393,11 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
 </head>
 <body>
 <div id="pt"></div>
+<div id="pg"></div>
+<?php if ($page === 'home'): ?>
+<!-- preloader : smiya + pourcentage (GSAP) -->
+<div id="pl"><div class="pl-name"><span class="line"><span class="inner"><?= e($name) ?></span></span></div><div class="pl-meta"><div class="pl-bar"><span class="pl-fill"></span></div><div class="pl-num">0</div></div></div>
+<?php endif; ?>
 
 <nav><div class="wrap">
   <a href="/" class="logo"><?= e($name) ?></a>
@@ -674,6 +710,7 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
   var root=document.documentElement;
   // ila les librairies ma t-charjatch => l'site kaybqa khddam b7al 9bl
   if(!window.gsap||!window.ScrollTrigger||!window.Lenis){root.classList.remove('js');return;}
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;   // motion mdeyya9 => bla animations
   gsap.registerPlugin(ScrollTrigger);
 
   /* 1) LENIS : scroll nasi3 */
@@ -693,8 +730,24 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
 
   /* 3) INTRO : l'rideau rose kayn9ss, morra l'hero kayban */
   var pt=document.getElementById('pt');
+  var pl=document.getElementById('pl');
   var tl=gsap.timeline({defaults:{ease:'power4.out'}});
-  tl.to(pt,{scaleY:0,duration:.8,ease:'power4.inOut'});
+  if(pl&&!root.classList.contains('nopl')){
+    /* PRELOADER (awl zyara): smiya + 0 -> 100 %, morra l'ecran kayt-tl3 */
+    gsap.set(pt,{scaleY:0});
+    lenis.stop();
+    var num=pl.querySelector('.pl-num'),cnt={v:0};
+    tl.fromTo('.pl-name .inner',{yPercent:110},{yPercent:0,duration:.9},0)
+      .to('.pl-fill',{scaleX:1,duration:1.8,ease:'power2.inOut'},0)
+      .to(cnt,{v:100,duration:1.8,ease:'power2.inOut',onUpdate:function(){num.textContent=Math.round(cnt.v)}},0)
+      .to(pl,{yPercent:-100,duration:.9,ease:'power4.inOut',onComplete:function(){
+        pl.remove();lenis.start();
+        try{sessionStorage.setItem('pl','1')}catch(e){}
+      }},'+=.25');
+  }else{
+    if(pl)pl.remove();
+    tl.to(pt,{scaleY:0,duration:.8,ease:'power4.inOut'});
+  }
   if(document.querySelector('.hero')){
     tl.fromTo('.hero .inner',{yPercent:115,autoAlpha:0},{yPercent:0,autoAlpha:1,duration:1.1,stagger:.12},'-=.35')
       .fromTo('.hero .hg,.hero p.sub,.hero .btns',{y:30,autoAlpha:0},{y:0,autoAlpha:1,duration:.8,stagger:.12},'-=.8')
@@ -774,8 +827,48 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
   });
   window.addEventListener('pageshow',function(ev){if(ev.persisted)gsap.set(pt,{scaleY:0})});
 
+  /* 10) BARRE DE PROGRESSION */
+  gsap.to('#pg',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.documentElement,start:'top top',end:'bottom bottom',scrub:.3}});
+
+  if(window.matchMedia('(pointer:fine)').matches){
+    /* 11) CURSEUR PERSONNALISE */
+    var cur=document.createElement('div');cur.id='cur';cur.innerHTML='<span></span>';document.body.appendChild(cur);
+    var curT=cur.firstChild,first=true;
+    root.classList.add('has-cur');
+    var cx=gsap.quickTo(cur,'x',{duration:.35,ease:'power3'}),cy=gsap.quickTo(cur,'y',{duration:.35,ease:'power3'});
+    window.addEventListener('mousemove',function(e){
+      if(first){gsap.set(cur,{x:e.clientX,y:e.clientY});first=false;}
+      cx(e.clientX);cy(e.clientY);cur.classList.add('on');
+    },{passive:true});
+    root.addEventListener('mouseleave',function(){cur.classList.remove('on')});
+    document.addEventListener('mouseover',function(e){
+      var t=e.target,mode='',label='',en=root.lang==='en';
+      if(t.closest('#lb')){mode='view';label=en?'Close':'Fermer'}
+      else if(t.closest('.gal figure')){mode='view';label=en?'View':'Voir'}
+      else if(t.closest('input,textarea')){mode='hide'}
+      else if(t.closest('a,button,.btn,.tag')){mode='big'}
+      cur.classList.remove('big','view','hide');
+      if(mode)cur.classList.add(mode);
+      curT.textContent=label;
+    });
+
+    /* 12) CARTES 3D : kat-mil m3a l-souris + dow */
+    document.querySelectorAll('.proj,.teaser,.part,.big').forEach(function(el){
+      el.classList.add('tilt');
+      el.addEventListener('mouseenter',function(){el.style.transition='box-shadow .3s,border-color .3s,background-color .4s'});
+      el.addEventListener('mousemove',function(e){
+        var r=el.getBoundingClientRect(),px=(e.clientX-r.left)/r.width-.5,py=(e.clientY-r.top)/r.height-.5;
+        el.style.setProperty('--mx',(px+.5)*100+'%');el.style.setProperty('--my',(py+.5)*100+'%');
+        gsap.to(el,{rotationY:px*10,rotationX:-py*10,y:-8,transformPerspective:900,duration:.4,ease:'power2.out',overwrite:'auto'});
+      });
+      el.addEventListener('mouseleave',function(){
+        gsap.to(el,{rotationX:0,rotationY:0,y:0,duration:.6,ease:'power3.out',overwrite:'auto',onComplete:function(){gsap.set(el,{clearProps:'transform'});el.style.transition=''}});
+      });
+    });
+  }
+
   // ila l'lien fih #ancre (mital /#modules) => 7ett l'page 3la dik l'blasa
-  if(location.hash){setTimeout(function(){lenis.scrollTo(location.hash,{immediate:true,offset:-70})},60)}
+  if(location.hash){setTimeout(function(){lenis.scrollTo(location.hash,{immediate:true,force:true,offset:-70})},60)}
   window.addEventListener('load',function(){ScrollTrigger.refresh()});
 })();
 </script>

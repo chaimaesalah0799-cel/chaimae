@@ -237,10 +237,10 @@ html[lang="fr"] .l-fr,html[lang="en"] .l-en{color:var(--pink)}
 @keyframes morph{50%{border-radius:45% 55% 45% 55%}}
 
 /* ===== MARQUEE (defilement infini, GSAP) ===== */
-.marquee{overflow:hidden;border-block:1px solid var(--line);padding:26px 0;background:var(--card)}
+.marquee{overflow:hidden;border-block:1px solid var(--line);padding:18px 0;background:var(--card)}
 .mq-track{display:flex;width:max-content}
-.mq-half{display:flex;align-items:center;gap:44px;padding-right:44px;white-space:nowrap;font-family:'Fraunces',serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.6rem);color:transparent;-webkit-text-stroke:1.5px var(--ink)}
-.mq-half i{font-style:normal;color:var(--pink);-webkit-text-stroke:0;font-size:.7em}
+.mq-half{display:flex;align-items:center;gap:36px;padding-right:36px;white-space:nowrap;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted)}
+.mq-half i{font-style:normal;color:var(--pink);font-size:.8em}
 
 /* ===== CARDS ===== */
 .card{background:var(--card);border:1px solid var(--line);border-radius:26px;padding:28px;box-shadow:var(--shadow);transition:transform .4s cubic-bezier(.2,.8,.2,1),box-shadow .4s,border-color .3s,background-color .4s}

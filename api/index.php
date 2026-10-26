@@ -187,8 +187,8 @@ h2::after{content:"";position:absolute;left:0;bottom:-10px;width:56px;height:4px
 h2:hover::after{width:100%}
 
 /* ===== TRANSITION DE PAGE (GSAP) ===== */
-#pt{position:fixed;inset:0;background:var(--pink);z-index:100;pointer-events:none;transform:scaleY(0);transform-origin:top}
-.js #pt{transform:scaleY(1)}
+#pt{position:fixed;inset:0;background:var(--bg);z-index:100;pointer-events:none;opacity:0}
+.js #pt{opacity:1}
 
 /* ===== NAV ===== */
 nav{position:sticky;top:0;z-index:20;background:var(--nav);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
@@ -727,13 +727,13 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
     last=y;
   });
 
-  /* 3) INTRO : l'rideau rose kayn9ss, morra l'hero kayban */
+  /* 3) INTRO : l'page kat-dkhl b dissolve (fondu), morra l'hero kayban */
   var pt=document.getElementById('pt');
   var pl=document.getElementById('pl');
   var tl=gsap.timeline({defaults:{ease:'power4.out'}});
   if(pl&&!root.classList.contains('nopl')){
     /* PRELOADER (awl zyara): smiya + 0 -> 100 %, morra l'ecran kayt-tl3 */
-    gsap.set(pt,{scaleY:0});
+    gsap.set(pt,{opacity:0});
     lenis.stop();
     var num=pl.querySelector('.pl-num'),cnt={v:0};
     tl.fromTo('.pl-name .inner',{yPercent:110},{yPercent:0,duration:.9},0)
@@ -745,7 +745,7 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
       }},'+=.25');
   }else{
     if(pl)pl.remove();
-    tl.to(pt,{scaleY:0,duration:.8,ease:'power4.inOut'});
+    tl.to(pt,{opacity:0,duration:.7,ease:'power2.inOut'});
   }
   if(document.querySelector('.hero')){
     tl.fromTo('.hero .inner',{yPercent:115,autoAlpha:0},{yPercent:0,autoAlpha:1,duration:1.1,stagger:.12},'-=.35')
@@ -820,11 +820,10 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
     if(h==='/'&&home){e.preventDefault();lenis.scrollTo(0);return;}
     if(h.charAt(0)==='/'&&h.indexOf('//')!==0){
       e.preventDefault();
-      gsap.set(pt,{transformOrigin:'bottom'});
-      gsap.to(pt,{scaleY:1,duration:.6,ease:'power4.inOut',onComplete:function(){location.href=h}});
+      gsap.to(pt,{opacity:1,duration:.6,ease:'power2.inOut',onComplete:function(){location.href=h}});
     }
   });
-  window.addEventListener('pageshow',function(ev){if(ev.persisted)gsap.set(pt,{scaleY:0})});
+  window.addEventListener('pageshow',function(ev){if(ev.persisted)gsap.set(pt,{opacity:0})});
 
   /* 10) BARRE DE PROGRESSION */
   gsap.to('#pg',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.documentElement,start:'top top',end:'bottom bottom',scrub:.3}});

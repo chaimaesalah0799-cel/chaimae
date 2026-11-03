@@ -356,16 +356,6 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
 /* ===== BARRE DE PROGRESSION ===== */
 #pg{position:fixed;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,#f08bb1,var(--pink));transform:scaleX(0);transform-origin:left;z-index:150;pointer-events:none}
 
-/* ===== CURSEUR PERSONNALISE (souris ghir) ===== */
-#cur{position:fixed;left:0;top:0;width:0;height:0;z-index:300;pointer-events:none;opacity:0;transition:opacity .3s}
-#cur.on{opacity:1}
-#cur span{position:absolute;left:0;top:0;width:14px;height:14px;margin:-7px 0 0 -7px;border-radius:50%;background:var(--pink);display:grid;place-items:center;color:#fff;font:800 .72rem 'Nunito',sans-serif;transition:width .3s,height .3s,margin .3s,background-color .3s,opacity .2s}
-#cur.big span{width:56px;height:56px;margin:-28px 0 0 -28px;background:rgba(229,69,127,.22);box-shadow:inset 0 0 0 1.5px var(--pink)}
-#cur.view span{width:78px;height:78px;margin:-39px 0 0 -39px}
-#cur.hide span{opacity:0}
-html.has-cur *{cursor:none!important}
-html.has-cur input,html.has-cur textarea{cursor:text!important}
-
 /* ===== CARTES 3D (tilt) + dow li kay-tb3 l-souris ===== */
 .tilt{position:relative}
 .tilt::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),rgba(229,69,127,.16),transparent 60%);transition:opacity .35s}
@@ -829,27 +819,6 @@ setLang(document.documentElement.lang); // applique la langue sauvegardée
   gsap.to('#pg',{scaleX:1,ease:'none',scrollTrigger:{trigger:document.documentElement,start:'top top',end:'bottom bottom',scrub:.3}});
 
   if(window.matchMedia('(pointer:fine)').matches){
-    /* 11) CURSEUR PERSONNALISE */
-    var cur=document.createElement('div');cur.id='cur';cur.innerHTML='<span></span>';document.body.appendChild(cur);
-    var curT=cur.firstChild,first=true;
-    root.classList.add('has-cur');
-    var cx=gsap.quickTo(cur,'x',{duration:.35,ease:'power3'}),cy=gsap.quickTo(cur,'y',{duration:.35,ease:'power3'});
-    window.addEventListener('mousemove',function(e){
-      if(first){gsap.set(cur,{x:e.clientX,y:e.clientY});first=false;}
-      cx(e.clientX);cy(e.clientY);cur.classList.add('on');
-    },{passive:true});
-    root.addEventListener('mouseleave',function(){cur.classList.remove('on')});
-    document.addEventListener('mouseover',function(e){
-      var t=e.target,mode='',label='',en=root.lang==='en';
-      if(t.closest('#lb')){mode='view';label=en?'Close':'Fermer'}
-      else if(t.closest('.gal figure')){mode='view';label=en?'View':'Voir'}
-      else if(t.closest('input,textarea')){mode='hide'}
-      else if(t.closest('a,button,.btn,.tag')){mode='big'}
-      cur.classList.remove('big','view','hide');
-      if(mode)cur.classList.add(mode);
-      curT.textContent=label;
-    });
-
     /* 12) CARTES 3D : kat-mil m3a l-souris + dow */
     document.querySelectorAll('.proj,.teaser,.part,.big').forEach(function(el){
       el.classList.add('tilt');

@@ -99,6 +99,12 @@ $agile = [
   "tp"    => [],
 ];
 
+// Ateliers li 3ndhom lien kharji: "Voir l'atelier" kay7ell had l-lien f blast galerie
+// (bghiti tzid wa7d akhor? zid satr, mital: 3 => "https://...")
+$atelierLinks = [
+  6 => "https://atelier-stagiaires-mu.vercel.app/",
+];
+
 // Les langues: level = men 1 l 5 (bdlo b rassek ila t7assnti)
 $languages = [
   ["name" => t("Arabe", "Arabic"),    "native" => "العربية", "lang" => "ar", "status" => t("Langue maternelle", "Native language"),          "level" => 5],
@@ -504,7 +510,11 @@ footer.dark a:hover{background:var(--pink);color:#fff;box-shadow:var(--shadow-h)
         <div class="ico"><b style="font-family:'Fraunces',serif;font-size:2.4rem"><?= $n ?></b></div>
         <h3><?= t("Atelier $n", "Workshop $n") ?></h3>
         <?php if ($cnt): ?><span class="tag"><?= $cnt ?> images</span><br><?php endif; ?>
-        <a class="btn primary" href="/?page=agile&amp;view=tp&amp;atelier=<?= $n ?>"><?= t("Voir l'atelier", 'View workshop') ?></a>
+        <?php if (!empty($atelierLinks[$n])): ?>
+          <a class="btn primary" href="<?= e($atelierLinks[$n]) ?>" target="_blank" rel="noopener"><?= t("Voir l'atelier", 'View workshop') ?></a>
+        <?php else: ?>
+          <a class="btn primary" href="/?page=agile&amp;view=tp&amp;atelier=<?= $n ?>"><?= t("Voir l'atelier", 'View workshop') ?></a>
+        <?php endif; ?>
       </div>
     <?php endfor; ?>
   </div>
